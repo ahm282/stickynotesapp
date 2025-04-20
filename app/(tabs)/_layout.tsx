@@ -1,45 +1,94 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
-
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import React from "react";
+import { Tabs } from "expo-router";
+import { Text } from "react-native";
+import { HapticTab } from "@/components/HapticTab";
+import { Archive, House, Tag } from "lucide-react-native";
+import { useTheme } from "@/theme/themeProvider";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+    const theme = useTheme();
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
-          },
-          default: {},
-        }),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
-        }}
-      />
-    </Tabs>
-  );
+    const tabBarItemStyle = {
+        borderTopColor: theme.borderColor,
+        justifyContent: "center" as const,
+        alignItems: "center" as const,
+        flexDirection: "row" as const,
+    };
+
+    return (
+        <Tabs
+            screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarButton: HapticTab,
+                tabBarStyle: {
+                    height: 60,
+                    backgroundColor: theme.background,
+                },
+                tabBarItemStyle,
+                tabBarActiveTintColor: theme.tint,
+                tabBarInactiveTintColor: theme.icon,
+                tabBarLabel: ({ focused, color }) => (
+                    <Text
+                        style={{
+                            fontSize: 12,
+                            fontFamily: "Poppins_400Regular",
+                            paddingBottom: 2,
+                            color,
+                            borderBottomWidth: 1,
+                            borderBottomColor: focused ? theme.tint : "transparent",
+                        }}>
+                        {(() => {
+                            switch (route.name) {
+                                case "index":
+                                    return "Home";
+                                case "Archive":
+                                    return "Archive";
+                                case "Tags":
+                                    return "Tags";
+                                default:
+                                    return route.name;
+                            }
+                        })()}
+                    </Text>
+                ),
+            })}>
+            <Tabs.Screen
+                name='index'
+                options={{
+                    title: "Home",
+                    tabBarLabel: "Home",
+                    tabBarIcon: ({ color }) => (
+                        <House
+                            size={22}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name='Archive'
+                options={{
+                    title: "Archive",
+                    tabBarIcon: ({ color }) => (
+                        <Archive
+                            size={22}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
+            <Tabs.Screen
+                name='Tags'
+                options={{
+                    title: "Tags",
+                    tabBarIcon: ({ color }) => (
+                        <Tag
+                            size={22}
+                            color={color}
+                        />
+                    ),
+                }}
+            />
+        </Tabs>
+    );
 }
