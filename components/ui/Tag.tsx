@@ -4,7 +4,7 @@ import { useTheme } from "@/theme/themeProvider";
 import StyledText from "./StyledText";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-type TagProps = {
+export type TagProps = {
     id: string;
     text: string;
     size?: "sm" | "md" | "lg";
@@ -29,14 +29,14 @@ export const Tag = ({
     const sizeStyle = getSizeStyle(size);
 
     // Use theme colors
-    const tagColor = theme.tint;
+    const primaryColor = theme.tint;
     const secondaryColor = theme.secondary;
     const textColor = theme.text;
     const tagStyle = {
-        backgroundColor: selected ? tagColor : secondaryColor,
+        backgroundColor: selected ? primaryColor : secondaryColor,
     };
     const textStyleColor = {
-        color: selected ? theme.background : theme.text,
+        color: selected ? theme.background : textColor,
     };
 
     const shouldShowIcon = text !== "All" && text !== "All notes";
@@ -52,7 +52,7 @@ export const Tag = ({
                 {shouldShowIcon && (
                     <MaterialCommunityIcons
                         name='tag-outline'
-                        size={20}
+                        size={15}
                         style={textStyleColor}
                     />
                 )}
@@ -64,7 +64,6 @@ export const Tag = ({
 
 const styles = StyleSheet.create({
     container: {
-        alignSelf: "flex-start",
         borderRadius: 20,
     },
     disabled: {
@@ -87,22 +86,22 @@ const getSizeStyle = (size: string): { padding: ViewStyle; font: TextStyle } => 
         case "sm":
             return {
                 padding: { paddingVertical: 4, paddingHorizontal: 8 },
-                font: { fontSize: 12, lineHeight: 14 },
+                font: { fontSize: 12 },
             };
         case "md":
             return {
                 padding: { paddingVertical: 8, paddingHorizontal: 20 },
-                font: { fontSize: 14, lineHeight: 18 },
+                font: { fontSize: 14 },
             };
         case "lg":
             return {
                 padding: { paddingVertical: 10, paddingHorizontal: 20 },
-                font: { fontSize: 18, lineHeight: 22 },
+                font: { fontSize: 18 },
             };
         default:
             return {
                 padding: { paddingVertical: 7, paddingHorizontal: 14 },
-                font: { fontSize: 14, lineHeight: 18 },
+                font: { fontSize: 14 },
             };
     }
 };

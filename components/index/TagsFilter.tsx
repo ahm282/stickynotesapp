@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Tag } from "@/components/ui/Tag";
-import { useTheme } from "@/theme/themeProvider";
 
 export const TagsFilter = () => {
-    const theme = useTheme();
     const tags = [
         { id: "2", text: "Work", color: "#a80450" },
         { id: "3", text: "Personal", color: "#04a850" },
@@ -15,12 +13,8 @@ export const TagsFilter = () => {
         { id: "8", text: "Reading", color: "#a8a804" },
     ];
 
-    const [selectedTag, setSelectedTag] = useState<string | null>(null);
+    const [selectedTag, setSelectedTag] = useState<string>("all");
     const [filteredTags, setFilteredTags] = useState(tags);
-
-    useEffect(() => {
-        setSelectedTag("all");
-    }, []);
 
     useEffect(() => {
         if (selectedTag && selectedTag !== "all") {
@@ -32,13 +26,15 @@ export const TagsFilter = () => {
     }, [selectedTag]);
 
     const handleTagPress = (id: string) => {
-        setSelectedTag((prev) => (prev === id ? "all" : id));
+        setSelectedTag((prevSelected) => (prevSelected === id ? "all" : id));
     };
 
     return (
         <ScrollView
             horizontal={true}
-            contentContainerStyle={styles.container}>
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.container}
+            style={styles.filterContainer}>
             <Tag
                 key='all'
                 id='all'
@@ -46,7 +42,6 @@ export const TagsFilter = () => {
                 size='md'
                 onPress={() => handleTagPress("all")}
                 selected={selectedTag === "all"}
-                style={styles.allNotesTag}
             />
             {tags.map((tag) => (
                 <Tag
@@ -64,13 +59,15 @@ export const TagsFilter = () => {
 
 const styles = StyleSheet.create({
     container: {
-        gap: 8,
+        gap: 6,
         flexDirection: "row",
-        paddingVertical: 4,
-        alignItems: "center",
+        alignItems: "flex-start",
+        paddingHorizontal: 10,
+        minHeight: 50,
     },
-    allNotesTag: {
-        marginRight: 4,
+    filterContainer: {
+        maxHeight: 70,
+        paddingVertical: 10,
     },
 });
 

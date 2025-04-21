@@ -3,19 +3,21 @@
 import type React from "react";
 import { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "@/theme/themeProvider";
 
 export interface Note {
     id: string;
     title: string;
     content: string;
     tagIds: string[];
+    color?: string; // Now stores the color key (e.g., "yellow", "blue") instead of hex value
     createdAt: number;
     updatedAt: number;
 }
 
 interface NotesContextType {
     notes: Note[];
-    addNote: (title: string, content: string, tagIds: string[]) => Promise<void>;
+    addNote: (title: string, content: string, tagIds: string[], color?: string) => Promise<void>;
     updateNote: (id: string, title: string, content: string, tagIds: string[]) => Promise<void>;
     deleteNote: (id: string) => Promise<void>;
     getNote: (id: string) => Note | undefined;
@@ -34,18 +36,32 @@ export const useNotes = () => {
 
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [notes, setNotes] = useState<Note[]>([]);
+    const theme = useTheme();
 
     useEffect(() => {
         const loadNotes = async () => {
             try {
                 const storedNotes = await AsyncStorage.getItem("notes");
                 if (storedNotes) {
-                    // Migrate old notes without tagIds if needed
+                    // Migrate old notes without tagIds if needed and convert hex colors to color keys if needed
                     const parsedNotes = JSON.parse(storedNotes);
-                    const migratedNotes = parsedNotes.map((note: any) => ({
-                        ...note,
-                        tagIds: note.tagIds || [],
-                    }));
+                    const migratedNotes = parsedNotes.map((note: any) => {
+                        // Add empty tagIds if missing
+                        const updatedNote = {
+                            ...note,
+                            tagIds: note.tagIds || [],
+                        };
+
+                        // Convert hex color to color key if it's a hex color
+                        // This is a migration step for older notes that used hex values
+                        if (note.color && note.color.startsWith("#")) {
+                            // Try to determine which theme color it is closest to
+                            // Simple approach: default to "yellow" if we can't determine
+                            updatedNote.color = "yellow";
+                        }
+
+                        return updatedNote;
+                    });
                     setNotes(migratedNotes);
                 }
             } catch (error) {
@@ -64,11 +80,12 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
     };
 
-    const addNote = async (title: string, content: string, tagIds: string[] = []) => {
+    const addNote = async (title: string, content: string, tagIds: string[] = [], color?: string) => {
         const newNote: Note = {
             id: Date.now().toString(),
             title,
             content,
+            color: color || "yellow", // Use provided color key or default to "yellow"
             tagIds,
             createdAt: Date.now(),
             updatedAt: Date.now(),

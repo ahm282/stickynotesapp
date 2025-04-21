@@ -6,6 +6,8 @@ import { Stack } from "expo-router";
 import { Text } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
+import { NotesProvider } from "@/context/NotesContext";
+import { TagsProvider } from "@/context/TagsContext";
 import "react-native-reanimated";
 import "@/global.css";
 
@@ -38,15 +40,19 @@ export default function RootLayout() {
 
     return (
         <ThemeProvider>
-            <Stack
-                screenOptions={{
-                    headerShown: false,
-                    statusBarStyle: colorScheme === "dark" ? "light" : "dark",
-                }}>
-                <Stack.Screen name='(tabs)' />
-                <Stack.Screen name='+not-found' />
-            </Stack>
-            <StatusBar style='auto' />
+            <NotesProvider>
+                <TagsProvider>
+                    <Stack
+                        screenOptions={{
+                            headerShown: false,
+                        }}>
+                        <Stack.Screen name='(tabs)' />
+                        <Stack.Screen name='create-note' />
+                        <Stack.Screen name='+not-found' />
+                    </Stack>
+                    <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+                </TagsProvider>
+            </NotesProvider>
         </ThemeProvider>
     );
 }

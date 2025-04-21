@@ -4,6 +4,7 @@ import { Text } from "react-native";
 import { HapticTab } from "@/components/HapticTab";
 import { Archive, House, Tag } from "lucide-react-native";
 import { useTheme } from "@/theme/themeProvider";
+import { StatusBar } from "expo-status-bar";
 
 export default function TabLayout() {
     const theme = useTheme();
@@ -56,7 +57,6 @@ export default function TabLayout() {
                 name='index'
                 options={{
                     title: "Home",
-                    tabBarLabel: "Home",
                     tabBarIcon: ({ color }) => (
                         <House
                             size={22}

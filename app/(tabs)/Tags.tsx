@@ -1,9 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
-import { useColorScheme } from "@/hooks/useColorScheme";
 
 export default function Tags() {
-    const colorScheme = useColorScheme();
-
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Tags</Text>
