@@ -22,7 +22,6 @@ export default function EditNote() {
 
     // If note is not found, navigate back
     if (!note) {
-        console.log("Note not found, navigating back");
         router.back();
         return null;
     }

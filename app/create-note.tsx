@@ -19,7 +19,6 @@ export default function CreateNote() {
 
     const handleSave = async () => {
         if (title.trim() || content.trim()) {
-            console.log("Saving note:", { title, content });
             await addNote(title.trim() || "Untitled note", content.trim(), [], selectedColor);
             router.back();
         } else {
