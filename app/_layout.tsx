@@ -8,6 +8,8 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { NotesProvider } from "@/context/NotesContext";
 import { TagsProvider } from "@/context/TagsContext";
+import { toastConfig } from "@/config/toast-config";
+import Toast from "react-native-toast-message";
 import * as SystemUI from "expo-system-ui";
 import "react-native-reanimated";
 import "@/global.css";
@@ -42,24 +44,33 @@ export default function RootLayout() {
     }
 
     return (
-        <ThemeProvider>
-            <NotesProvider>
-                <TagsProvider>
-                    <Stack
-                        screenOptions={{
-                            headerShown: false,
-                            animation: "flip",
-                            animationMatchesGesture: true,
-                            animationTypeForReplace: "push",
-                            statusBarAnimation: "fade",
-                        }}>
-                        <Stack.Screen name='(tabs)' />
-                        <Stack.Screen name='create-note' />
-                        <Stack.Screen name='+not-found' />
-                    </Stack>
-                    <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
-                </TagsProvider>
-            </NotesProvider>
-        </ThemeProvider>
+        <>
+            <ThemeProvider>
+                <NotesProvider>
+                    <TagsProvider>
+                        <Stack
+                            screenOptions={{
+                                headerShown: false,
+                                animation: "flip",
+                                animationMatchesGesture: true,
+                                animationTypeForReplace: "push",
+                                statusBarAnimation: "fade",
+                            }}>
+                            <Stack.Screen name='(tabs)' />
+                            <Stack.Screen name='create-note' />
+                            <Stack.Screen name='+not-found' />
+                        </Stack>
+                        <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+                        <Toast
+                            autoHide={true}
+                            visibilityTime={3000}
+                            position='top'
+                            topOffset={50}
+                            config={toastConfig}
+                        />
+                    </TagsProvider>
+                </NotesProvider>
+            </ThemeProvider>
+        </>
     );
 }

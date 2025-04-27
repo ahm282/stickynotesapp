@@ -1,6 +1,7 @@
 import type React from "react";
 import { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Toast from "react-native-toast-message";
 
 export interface Note {
     id: string;
@@ -94,6 +95,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const updatedNotes = [...notes, newNote];
         setNotes(updatedNotes);
         await saveNotes(updatedNotes);
+        Toast.show({
+            type: "success",
+            text1: "Note Created",
+            text2: "Your note has been created successfully.",
+        });
     };
 
     const updateNote = async (
@@ -109,12 +115,22 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
         setNotes(updatedNotes);
         await saveNotes(updatedNotes);
+        Toast.show({
+            type: "success",
+            text1: "Note Updated",
+            text2: "Your changes have been saved.",
+        });
     };
 
     const deleteNote = async (id: string) => {
         const updatedNotes = notes.filter((note) => note.id !== id);
         setNotes(updatedNotes);
         await saveNotes(updatedNotes);
+        Toast.show({
+            type: "delete",
+            text1: "Note Deleted",
+            text2: "The note has been removed.",
+        });
     };
 
     const getNote = (id: string) => {
@@ -129,12 +145,22 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const updatedNotes = notes.map((note) => (note.id === id ? { ...note, isArchived: true } : note));
         setNotes(updatedNotes);
         await saveNotes(updatedNotes);
+        Toast.show({
+            type: "archive",
+            text1: "Note Archived",
+            text2: "The note has been moved to archives.",
+        });
     };
 
     const unarchiveNote = async (id: string) => {
         const updatedNotes = notes.map((note) => (note.id === id ? { ...note, isArchived: false } : note));
         setNotes(updatedNotes);
         await saveNotes(updatedNotes);
+        Toast.show({
+            type: "info",
+            text1: "Note Restored",
+            text2: "The note has been moved back to your notes.",
+        });
     };
 
     return (

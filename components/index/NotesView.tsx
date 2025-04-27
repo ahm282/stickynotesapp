@@ -17,6 +17,7 @@ export const NotesView = () => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.emptyContainer}>
                 <StyledText
+                    bold
                     style={{
                         fontSize: 18,
                         color: theme.text,

@@ -20,7 +20,7 @@ export default function Archive() {
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
             <Header
                 title='Archive'
-                subtitle='Your archived notes'
+                subtitle='Your archived notes.'
             />
             <TagsFilter />
             {archivedNotes.length < 1 ? (
@@ -28,6 +28,7 @@ export default function Archive() {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={styles.emptyContainer}>
                     <StyledText
+                        bold
                         style={{
                             fontSize: 18,
                             color: theme.text,

@@ -7,6 +7,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNotes } from "@/context/NotesContext";
 import StyledText from "@/components/ui/StyledText";
 import ColorSelector from "@/components/ui/ColorSelector";
+import Toast from "react-native-toast-message";
 
 export default function CreateNote() {
     const theme = useTheme();
@@ -22,8 +23,11 @@ export default function CreateNote() {
             await addNote(title.trim() || "Untitled note", content.trim(), [], selectedColor);
             router.back();
         } else {
-            // Don't save empty notes
-            router.back();
+            Toast.show({
+                type: "error",
+                text1: "Error",
+                text2: "Please enter a title or content for the note.",
+            });
         }
     };
 
