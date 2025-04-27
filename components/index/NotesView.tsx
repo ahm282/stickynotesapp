@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import { useNotes } from "@/context/NotesContext";

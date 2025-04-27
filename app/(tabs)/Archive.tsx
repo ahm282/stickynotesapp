@@ -22,7 +22,6 @@ export default function Archive() {
                 title='Archive'
                 subtitle='Your archived notes'
             />
-    
             <TagsFilter />
             {archivedNotes.length < 1 ? (
                 <ScrollView
