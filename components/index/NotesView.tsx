@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import { useNotes } from "@/context/NotesContext";
@@ -9,14 +9,16 @@ export const NotesView = () => {
     const theme = useTheme();
     const { notes } = useNotes();
 
-    return notes.length < 1 ? (
+    const unarchivedNotes = notes.filter((note) => note.isArchived === false);
+
+    return unarchivedNotes.length < 1 ? (
         <>
             <ScrollView
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.emptyContainer}>
                 <StyledText
                     style={{
-                        fontSize: 14,
+                        fontSize: 18,
                         color: theme.text,
                         textAlign: "center",
                     }}>
@@ -53,7 +55,6 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 16,
     },
     gridContainer: {
         flexDirection: "row",

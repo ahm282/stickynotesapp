@@ -8,8 +8,11 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { NotesProvider } from "@/context/NotesContext";
 import { TagsProvider } from "@/context/TagsContext";
+import * as SystemUI from "expo-system-ui";
 import "react-native-reanimated";
 import "@/global.css";
+
+SystemUI.setBackgroundColorAsync("transparent");
 
 (Text as any).defaultProps = {
     // Preserve existing defaultProps if any
@@ -45,6 +48,10 @@ export default function RootLayout() {
                     <Stack
                         screenOptions={{
                             headerShown: false,
+                            animation: "flip",
+                            animationMatchesGesture: true,
+                            animationTypeForReplace: "push",
+                            statusBarAnimation: "fade",
                         }}>
                         <Stack.Screen name='(tabs)' />
                         <Stack.Screen name='create-note' />

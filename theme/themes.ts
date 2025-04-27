@@ -1,17 +1,17 @@
 export const lightTheme = {
     mode: "light",
     white: "#f1f1f1",
-    text: "#111827", // from Colors.light.text (gray-900)
-    background: "#F9FAFB", // from Colors.light.background (gray-50)
-    tint: "#f59e0b", // assuming tintColorLight = #f59e0b
-    icon: "#6B7280", // from Colors.light.icon (gray-500)
+    text: "#111827",
+    background: "#F9FAFB",
+    tint: "#f59e0b",
+    icon: "#6B7280",
     card: "#ffffff",
-    secondary: "#E5E7EB", // Colors.light.border (gray-200)
-    borderColor: "#ccc", // unified with secondary
-    tabIconDefault: "#9CA3AF", // Colors.light.tabIconDefault (gray-400)
-    tabIconSelected: "#f59e0b", // tintColorLight
-    muted: "#F3F4F6", // gray-100
-    destructive: "#EF4444", // red-500
+    secondary: "#E5E7EB",
+    borderColor: "#ccc",
+    tabIconDefault: "#9CA3AF",
+    tabIconSelected: "#f59e0b",
+    muted: "#F3F4F6",
+    destructive: "#EF4444",
 
     // Note colors
     yellow: "#FFF9C4",
@@ -23,26 +23,26 @@ export const lightTheme = {
 
     // Tag colors
     tagBackground: "rgba(0, 0, 0, 0.1)",
-    tagText: "#4B5563", // gray-600
+    tagText: "#4B5563",
 };
 
 export const darkTheme = {
     mode: "dark",
     white: "#f1f1f1",
-    text: "#F9FAFB", // from Colors.dark.text (gray-50)
-    background: "#111827", // from Colors.dark.background (gray-900)
-    tint: "#f59e0b", // assuming tintColorDark = #f59e0b
-    icon: "#9CA3AF", // from Colors.dark.icon (gray-400)
-    card: "#374151", // from Colors.dark.border (gray-700)
-    secondary: "#1F2937", // Colors.dark.muted (gray-800)
-    borderColor: "#777", // dark border from Colors
-    tabIconDefault: "#6B7280", // from Colors.dark.tabIconDefault (gray-500)
-    tabIconSelected: "#f59e0b", // tintColorDark
-    muted: "#1F2937", // gray-800
-    destructive: "#EF4444", // red-500
+    text: "#F9FAFB",
+    background: "#111827",
+    tint: "#f59e0b",
+    icon: "#9CA3AF",
+    card: "#374151",
+    secondary: "#1F2937",
+    borderColor: "#777",
+    tabIconDefault: "#6B7280",
+    tabIconSelected: "#f59e0b",
+    muted: "#1F2937",
+    destructive: "#EF4444",
 
     // Note colors
-    yellow: "#E8AA05",
+    yellow: "#E19E09",
     blue: "#0277BD",
     green: "#2E7D32",
     purple: "#7B1FA2",
@@ -51,7 +51,7 @@ export const darkTheme = {
 
     // Tag colors
     tagBackground: "rgba(255, 255, 255, 0.2)",
-    tagText: "#E5E7EB", // gray-200
+    tagText: "#E5E7EB",
 };
 
 export type ThemeType = typeof lightTheme;

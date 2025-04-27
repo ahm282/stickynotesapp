@@ -58,11 +58,16 @@ export default function EditNote() {
                         style={[
                             styles.titleInput,
                             { color: theme.text, borderBottomColor: "transparent", width: "90%" },
-                        ]}>
+                        ]}
+                        selectable={true}>
                         {noteTitle}
                     </StyledText>
                 </View>
-                <StyledText style={[styles.contentInput, { color: theme.text }]}>{noteContent}</StyledText>
+                <StyledText
+                    selectable={true}
+                    style={[styles.contentInput, { color: theme.text }]}>
+                    {noteContent}
+                </StyledText>
             </View>
         </SafeAreaView>
     );
