@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
-        paddingHorizontal: 16,
         paddingVertical: 8,
+        paddingHorizontal: 8,
     },
 });
 

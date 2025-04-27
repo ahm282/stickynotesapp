@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TagsFilter } from "@/components/index/TagsFilter";
 import { useTheme } from "@/theme/themeProvider";
 import { NotesView } from "@/components/index/NotesView";
-import { IndexHeader } from "@/components/index/IndexHeader";
+import { Header } from "@/components/index/Header";
 import NewNoteButton from "@/components/ui/NewNoteButton";
 
 export default function Index() {
@@ -12,7 +12,10 @@ export default function Index() {
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-            <IndexHeader />
+            <Header
+                title='Sticky Notes'
+                subtitle='Capture your thoughts and ideas with ease.'
+            />
             <TagsFilter />
             <NotesView />
             <NewNoteButton />
@@ -24,6 +27,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: "10%",
-        paddingHorizontal: 5,
+        paddingHorizontal: 16,
     },
 });

@@ -4,11 +4,16 @@ import { useTheme } from "@/theme/themeProvider";
 import StyledText from "@/components/ui/StyledText";
 import { FontAwesome6 } from "@expo/vector-icons";
 
-export const IndexHeader = () => {
+interface HeaderProps {
+    title: string;
+    subtitle: string;
+}
+
+export const Header = ({ title, subtitle }: HeaderProps) => {
     const theme = useTheme();
 
     return (
-        <View style={{ paddingVertical: 15, paddingHorizontal: 15 }}>
+        <View style={{ paddingVertical: 15 }}>
             <View
                 style={{
                     flexDirection: "row",
@@ -28,7 +33,7 @@ export const IndexHeader = () => {
                         marginTop: 5,
                     }}>
                     {"  "}
-                    Sticky Notes
+                    {title}
                 </StyledText>
             </View>
             <StyledText
@@ -36,7 +41,7 @@ export const IndexHeader = () => {
                     fontSize: 14,
                     color: theme.text,
                 }}>
-                Capture your thoughts and ideas with ease.
+                {subtitle}
             </StyledText>
         </View>
     );

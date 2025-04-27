@@ -88,6 +88,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             tagIds,
             createdAt: Date.now(),
             updatedAt: Date.now(),
+            isArchived: false,
         };
 
         const updatedNotes = [...notes, newNote];

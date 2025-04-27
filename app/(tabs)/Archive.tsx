@@ -7,6 +7,7 @@ import { FontAwesome6 } from "@expo/vector-icons";
 import StyledText from "@/components/ui/StyledText";
 import NoteEntry from "@/components/ui/NoteEntry";
 import TagsFilter from "@/components/index/TagsFilter";
+import { Header } from "@/components/index/Header";
 
 export default function Archive() {
     const theme = useTheme();
@@ -17,29 +18,11 @@ export default function Archive() {
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-            <View style={{ paddingVertical: 15 }}>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        marginBottom: 5,
-                    }}>
-                    <FontAwesome6
-                        name='sticky-note'
-                        size={36}
-                        color={theme.tint}
-                    />
-                    <StyledText
-                        bold
-                        style={{
-                            fontSize: 30,
-                            color: theme.text,
-                            marginTop: 5,
-                        }}>
-                        {"  "}
-                        Archived Notes
-                    </StyledText>
-                </View>
+            <View>
+                <Header
+                    title='Archive'
+                    subtitle='Your archived notes'
+                />
                 <View>
                     <TagsFilter />
                 </View>
@@ -82,7 +65,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: "10%",
-        paddingHorizontal: 5,
+        paddingHorizontal: 16,
     },
     header: {
         flexDirection: "row",
