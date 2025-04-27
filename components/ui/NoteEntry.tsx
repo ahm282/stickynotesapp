@@ -6,6 +6,7 @@ import Entypo from "@expo/vector-icons/Entypo";
 import StyledText from "@/components/ui/StyledText";
 import truncateText from "@/util/TruncateNote";
 import NoteOptionsMenu from "@/components/ui/NoteOptionsMenu";
+import { router } from "expo-router";
 
 interface NoteProps {
     note: Note;
@@ -13,7 +14,7 @@ interface NoteProps {
 
 export const NoteEntry = ({ note }: NoteProps) => {
     const theme = useTheme();
-    const { deleteNote } = useNotes();
+    const { deleteNote, archiveNote, unarchiveNote } = useNotes();
     const screenWidth = Dimensions.get("window").width;
     const noteWidth = (screenWidth - 60) / 2;
     const noteHeight = 230;
@@ -32,19 +33,30 @@ export const NoteEntry = ({ note }: NoteProps) => {
         return theme[note.color as keyof typeof theme] || theme.card;
     };
 
+    const handleViewNote = () => {
+        router.push({
+            pathname: "/read-note",
+            params: { noteId: note.id },
+        });
+    };
+
     const handleDelete = () => {
-        console.log("Deleting note:", note.id);
         deleteNote(note.id);
     };
 
     const handleEdit = () => {
-        console.log("Edit note:", note.id);
-        // Will implement edit functionality later
+        router.push({
+            pathname: "/edit-note",
+            params: { noteId: note.id },
+        });
     };
 
-    const handleArchive = () => {
-        console.log("Archive note:", note.id);
-        // Will implement archive functionality later
+    const handleArchiveToggle = async () => {
+        if (note.isArchived) {
+            await unarchiveNote(note.id);
+        } else {
+            await archiveNote(note.id);
+        }
     };
 
     // Function to measure icon position and show menu
@@ -64,7 +76,7 @@ export const NoteEntry = ({ note }: NoteProps) => {
 
     return (
         <TouchableOpacity
-            onPress={() => console.log("Note pressed:", note.id)}
+            onPress={() => handleViewNote()}
             activeOpacity={0.05}
             style={{
                 ...styles.noteItem,
@@ -109,8 +121,9 @@ export const NoteEntry = ({ note }: NoteProps) => {
                 onClose={() => setMenuVisible(false)}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
-                onArchive={handleArchive}
+                onArchive={handleArchiveToggle}
                 menuPosition={menuPosition}
+                isArchived={note.isArchived}
             />
         </TouchableOpacity>
     );

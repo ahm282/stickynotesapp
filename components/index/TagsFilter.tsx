@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
         gap: 6,
         flexDirection: "row",
         alignItems: "flex-start",
-        paddingHorizontal: 10,
         minHeight: 50,
     },
     filterContainer: {

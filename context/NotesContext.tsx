@@ -1,16 +1,14 @@
-"use client";
-
 import type React from "react";
 import { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useTheme } from "@/theme/themeProvider";
 
 export interface Note {
     id: string;
     title: string;
     content: string;
     tagIds: string[];
-    color?: string; // Now stores the color key (e.g., "yellow", "blue") instead of hex value
+    color?: string;
+    isArchived?: boolean;
     createdAt: number;
     updatedAt: number;
 }
@@ -18,10 +16,12 @@ export interface Note {
 interface NotesContextType {
     notes: Note[];
     addNote: (title: string, content: string, tagIds: string[], color?: string) => Promise<void>;
-    updateNote: (id: string, title: string, content: string, tagIds: string[]) => Promise<void>;
+    updateNote: (id: string, title: string, content: string, tagIds: string[], color: string) => Promise<void>;
     deleteNote: (id: string) => Promise<void>;
     getNote: (id: string) => Note | undefined;
     getNotesByTag: (tagId: string) => Note[];
+    archiveNote: (id: string) => Promise<void>;
+    unarchiveNote: (id: string) => Promise<void>;
 }
 
 const NotesContext = createContext<NotesContextType | undefined>(undefined);
@@ -36,7 +36,6 @@ export const useNotes = () => {
 
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [notes, setNotes] = useState<Note[]>([]);
-    const theme = useTheme();
 
     useEffect(() => {
         const loadNotes = async () => {
@@ -96,9 +95,15 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         await saveNotes(updatedNotes);
     };
 
-    const updateNote = async (id: string, title: string, content: string, tagIds: string[] = []) => {
+    const updateNote = async (
+        id: string,
+        title: string,
+        content: string,
+        tagIds: string[] = [],
+        color: string = "yellow"
+    ) => {
         const updatedNotes = notes.map((note) =>
-            note.id === id ? { ...note, title, content, tagIds, updatedAt: Date.now() } : note
+            note.id === id ? { ...note, title, content, tagIds, color, updatedAt: Date.now() } : note
         );
 
         setNotes(updatedNotes);
@@ -119,8 +124,21 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return notes.filter((note) => note.tagIds.includes(tagId));
     };
 
+    const archiveNote = async (id: string) => {
+        const updatedNotes = notes.map((note) => (note.id === id ? { ...note, isArchived: true } : note));
+        setNotes(updatedNotes);
+        await saveNotes(updatedNotes);
+    };
+
+    const unarchiveNote = async (id: string) => {
+        const updatedNotes = notes.map((note) => (note.id === id ? { ...note, isArchived: false } : note));
+        setNotes(updatedNotes);
+        await saveNotes(updatedNotes);
+    };
+
     return (
-        <NotesContext.Provider value={{ notes, addNote, updateNote, deleteNote, getNote, getNotesByTag }}>
+        <NotesContext.Provider
+            value={{ notes, addNote, updateNote, deleteNote, getNote, getNotesByTag, archiveNote, unarchiveNote }}>
             {children}
         </NotesContext.Provider>
     );

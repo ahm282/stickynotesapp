@@ -9,7 +9,6 @@ export const NotesView = () => {
     const theme = useTheme();
     const { notes } = useNotes();
 
-    console.log("NotesView rendered with notes:", notes);
     return notes.length < 1 ? (
         <>
             <ScrollView
@@ -31,12 +30,15 @@ export const NotesView = () => {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={styles.container}>
                 <View style={styles.gridContainer}>
-                    {notes.map((note) => (
-                        <NoteEntry
-                            key={note.id}
-                            note={note}
-                        />
-                    ))}
+                    {notes.map(
+                        (note) =>
+                            note.isArchived === false && (
+                                <NoteEntry
+                                    key={note.id}
+                                    note={note}
+                                />
+                            )
+                    )}
                 </View>
             </ScrollView>
         </>

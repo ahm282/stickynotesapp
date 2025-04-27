@@ -1,8 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import { MaterialIcons } from "@expo/vector-icons";
-import Entypo from "@expo/vector-icons/Entypo";
 import StyledText from "./StyledText";
 
 interface NoteOptionsMenuProps {
@@ -12,6 +11,7 @@ interface NoteOptionsMenuProps {
     onEdit?: () => void;
     onArchive?: () => void;
     menuPosition?: { x: number; y: number }; // Added position prop
+    isArchived?: boolean;
 }
 
 const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
@@ -21,6 +21,7 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
     onEdit,
     onArchive,
     menuPosition,
+    isArchived,
 }) => {
     const theme = useTheme();
     const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -115,7 +116,9 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                                         size={18}
                                         color={theme.text}
                                     />
-                                    <StyledText style={styles.menuText}>Archive</StyledText>
+                                    <StyledText style={styles.menuText}>
+                                        {isArchived ? "Unarchive" : "Archive"}
+                                    </StyledText>
                                 </TouchableOpacity>
                             )}
 
