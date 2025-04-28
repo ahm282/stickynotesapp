@@ -41,16 +41,16 @@ export const TagInput = ({ onAddTag }: TagInputProps) => {
     };
 
     return (
-        <View style={[styles.addTagContainer, { backgroundColor: theme.card }]}>
+        <View style={[styles.tagInputContainer, { backgroundColor: theme.card }]}>
             <TextInput
                 placeholder='Add a new tag...'
                 placeholderTextColor={theme.icon}
-                style={[styles.tagInput, { color: theme.text }]}
+                style={[styles.tagInputField, { color: theme.text }]}
                 value={newTagName}
                 onChangeText={setNewTagName}
             />
             <TouchableOpacity
-                style={[styles.addButton, { backgroundColor: theme.tint }]}
+                style={[styles.tagAddButton, { backgroundColor: theme.tint }]}
                 onPress={handleAddTag}>
                 <Plus
                     size={16}
@@ -62,7 +62,7 @@ export const TagInput = ({ onAddTag }: TagInputProps) => {
 };
 
 const styles = StyleSheet.create({
-    addTagContainer: {
+    tagInputContainer: {
         flexDirection: "row",
         padding: 12,
         borderRadius: 10,
@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
     },
-    tagInput: {
+    tagInputField: {
         flex: 1,
         fontSize: 16,
         fontFamily: "Poppins_400Regular",
         paddingVertical: 8,
         paddingHorizontal: 4,
     },
-    addButton: {
+    tagAddButton: {
         width: 30,
         height: 30,
         borderRadius: 7,

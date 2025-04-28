@@ -79,16 +79,16 @@ export const NoteEntry = ({ note }: NoteProps) => {
             onPress={() => handleViewNote()}
             activeOpacity={0.05}
             style={{
-                ...styles.noteItem,
+                ...styles.noteCard,
                 backgroundColor: getNoteColor(),
                 width: noteWidth,
             }}>
             <View>
-                <View style={styles.noteHeader}>
+                <View style={styles.noteCardHeader}>
                     <View>
                         <StyledText
                             style={{
-                                ...styles.noteTitle,
+                                ...styles.noteCardTitle,
                                 color: theme.text,
                             }}
                             bold>
@@ -96,7 +96,7 @@ export const NoteEntry = ({ note }: NoteProps) => {
                         </StyledText>
                         <StyledText
                             style={{
-                                ...styles.noteDate,
+                                ...styles.noteCardDate,
                                 color: theme.tagText,
                             }}>
                             {new Date(note.createdAt).toLocaleDateString()}
@@ -109,11 +109,11 @@ export const NoteEntry = ({ note }: NoteProps) => {
                             name='dots-three-vertical'
                             size={16}
                             color={theme.text}
-                            style={styles.noteActionsButton}
+                            style={styles.optionsIcon}
                         />
                     </TouchableOpacity>
                 </View>
-                <StyledText style={styles.noteContent}>{truncatedContent}</StyledText>
+                <StyledText style={styles.noteCardContent}>{truncatedContent}</StyledText>
             </View>
 
             <NoteOptionsMenu
@@ -130,7 +130,7 @@ export const NoteEntry = ({ note }: NoteProps) => {
 };
 
 const styles = StyleSheet.create({
-    noteItem: {
+    noteCard: {
         marginBottom: 16,
         borderRadius: 8,
         shadowColor: "#000",
@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
         elevation: 2,
         height: 230,
     },
-    noteHeader: {
+    noteCardHeader: {
         paddingStart: 16,
         paddingEnd: 0,
         paddingVertical: 10,
@@ -149,17 +149,17 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         alignItems: "center",
     },
-    noteTitle: {
+    noteCardTitle: {
         fontSize: 15,
     },
-    noteDate: {
+    noteCardDate: {
         fontSize: 8,
     },
-    noteContent: {
+    noteCardContent: {
         fontSize: 14,
         paddingHorizontal: 16,
     },
-    noteActionsButton: {
+    optionsIcon: {
         padding: 10,
         paddingStart: 20,
         paddingEnd: 8,

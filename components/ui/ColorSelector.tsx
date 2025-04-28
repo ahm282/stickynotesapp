@@ -63,7 +63,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selectedColor, onSelectCo
     return (
         <View>
             <TouchableOpacity
-                style={[styles.colorIndicator, { backgroundColor: getColorValue(selectedColor) }]}
+                style={[styles.colorButton, { backgroundColor: getColorValue(selectedColor) }]}
                 onPress={showMenu}>
                 <SwatchBook
                     size={16}
@@ -81,18 +81,18 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selectedColor, onSelectCo
                         <TouchableWithoutFeedback>
                             <Animated.View
                                 style={[
-                                    styles.colorMenu,
+                                    styles.colorPalette,
                                     {
                                         backgroundColor: theme.card,
                                         opacity: fadeAnim,
                                         transform: [{ scale: scaleAnim }],
                                     },
                                 ]}>
-                                <View style={styles.colorOptionsContainer}>
+                                <View style={styles.colorOptionsGrid}>
                                     {colorOptions.map((colorKey) => (
                                         <TouchableOpacity
                                             key={colorKey}
-                                            style={[styles.colorOption, { backgroundColor: getColorValue(colorKey) }]}
+                                            style={[styles.colorSwatch, { backgroundColor: getColorValue(colorKey) }]}
                                             onPress={() => handleColorSelect(colorKey)}>
                                             {selectedColor === colorKey && (
                                                 <Check
@@ -113,10 +113,10 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selectedColor, onSelectCo
 };
 
 const styles = StyleSheet.create({
-    colorIndicator: {
+    colorButton: {
         width: 32,
         height: 32,
-        borderRadius: "50%",
+        borderRadius: 16,
         justifyContent: "center",
         alignItems: "center",
     },
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    colorMenu: {
+    colorPalette: {
         padding: 12,
         borderRadius: 12,
         shadowColor: "#000",
@@ -137,13 +137,13 @@ const styles = StyleSheet.create({
         top: 120,
         right: 20,
     },
-    colorOptionsContainer: {
+    colorOptionsGrid: {
         flexDirection: "row",
         flexWrap: "wrap",
         justifyContent: "space-between",
         width: 150,
     },
-    colorOption: {
+    colorSwatch: {
         width: 40,
         height: 40,
         borderRadius: 20,

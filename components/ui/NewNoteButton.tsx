@@ -11,19 +11,19 @@ export const NewNoteButton = () => {
     return (
         <TouchableOpacity
             onPress={() => router.push("/create-note")}
-            style={[styles.button, { backgroundColor: theme.tint }]}>
+            style={[styles.createNoteButton, { backgroundColor: theme.tint }]}>
             <Plus
                 size={20}
                 color={theme.background}
                 style={{ marginBottom: 3, marginEnd: 2 }}
             />
-            <StyledText style={[styles.text, { color: theme.background }]}>New Note</StyledText>
+            <StyledText style={[styles.buttonLabel, { color: theme.background }]}>New Note</StyledText>
         </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
-    button: {
+    createNoteButton: {
         position: "absolute",
         bottom: 20,
         right: 10,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
     },
-    text: {
+    buttonLabel: {
         marginStart: 4,
         fontSize: 16,
     },

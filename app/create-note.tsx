@@ -7,6 +7,7 @@ import { useNotes } from "@/context/NotesContext";
 import { ArrowLeft } from "lucide-react-native";
 import StyledText from "@/components/ui/StyledText";
 import ColorSelector from "@/components/ui/ColorSelector";
+import NotebookTextInput from "@/components/ui/NotebookTextInput";
 import Toast from "react-native-toast-message";
 
 export default function CreateNote() {
@@ -67,11 +68,9 @@ export default function CreateNote() {
                         onSelectColor={setSelectedColor}
                     />
                 </View>
-                <TextInput
+                <NotebookTextInput
                     placeholder='Write your note here...'
                     placeholderTextColor={theme.icon}
-                    style={[styles.contentInput, { color: theme.text }]}
-                    multiline
                     value={content}
                     onChangeText={setContent}
                     autoFocus
@@ -111,19 +110,11 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
+        rowGap: 32,
     },
     titleInput: {
         fontSize: 24,
         fontFamily: "Poppins_700Bold",
-        paddingVertical: 5,
         borderBottomWidth: 1,
-        marginBottom: 16,
-    },
-    contentInput: {
-        fontSize: 16,
-        marginTop: 10,
-        fontFamily: "Poppins_400Regular",
-        flex: 1,
-        textAlignVertical: "top",
     },
 });

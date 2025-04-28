@@ -19,20 +19,20 @@ export const Tag = ({ id, text, size = "sm", onPress, selected = false }: TagPro
             activeOpacity={0.7}
             onPress={() => onPress?.(id)}
             style={[
-                styles.container,
+                styles.tagWrapper,
                 size === "sm" ? styles.smallTag : styles.mediumTag,
                 selected ? { backgroundColor: theme.tint } : { backgroundColor: theme.tagBackground },
             ]}>
-            <View style={styles.tagContent}>
+            <View style={styles.tagContentLayout}>
                 <TagIcon
                     size={size === "sm" ? 8 : 14}
                     color={selected ? theme.background : theme.icon}
-                    style={[styles.icon, size === "sm" ? styles.smallIcon : styles.mediumIcon]}
+                    style={[styles.tagIcon, size === "sm" ? styles.smallTagIcon : styles.mediumTagIcon]}
                 />
                 <StyledText
                     style={[
-                        styles.text,
-                        size === "sm" ? styles.smallText : styles.mediumText,
+                        styles.tagLabel,
+                        size === "sm" ? styles.smallTagText : styles.mediumTagText,
                         { color: selected ? theme.background : theme.icon },
                     ]}>
                     {text}
@@ -43,7 +43,7 @@ export const Tag = ({ id, text, size = "sm", onPress, selected = false }: TagPro
 };
 
 const styles = StyleSheet.create({
-    container: {
+    tagWrapper: {
         borderRadius: 16,
         alignItems: "center",
         justifyContent: "center",
@@ -62,28 +62,28 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    tagContent: {
+    tagContentLayout: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
     },
-    icon: {
+    tagIcon: {
         marginEnd: 7,
     },
-    smallIcon: {
+    smallTagIcon: {
         marginTop: 1,
     },
-    mediumIcon: {
+    mediumTagIcon: {
         marginTop: 1,
     },
-    text: {
+    tagLabel: {
         fontFamily: "Poppins_400Regular",
         lineHeight: 20,
     },
-    smallText: {
+    smallTagText: {
         fontSize: 12,
     },
-    mediumText: {
+    mediumTagText: {
         fontSize: 14,
     },
 });

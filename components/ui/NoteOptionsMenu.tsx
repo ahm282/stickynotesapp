@@ -78,7 +78,7 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                     <TouchableWithoutFeedback>
                         <Animated.View
                             style={[
-                                styles.menuContainer,
+                                styles.menuPopup,
                                 {
                                     backgroundColor: theme.muted,
                                     borderColor: theme.borderColor,
@@ -91,7 +91,7 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                             {onEdit && (
                                 <TouchableOpacity
                                     style={[
-                                        styles.menuItem,
+                                        styles.menuOption,
                                         { borderBottomColor: theme.borderColor, borderBottomWidth: 1 },
                                     ]}
                                     onPress={() => handleAction(onEdit)}>
@@ -99,14 +99,14 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                                         size={18}
                                         color={"#4A90E2"}
                                     />
-                                    <StyledText style={styles.menuText}>Edit</StyledText>
+                                    <StyledText style={styles.menuOptionText}>Edit</StyledText>
                                 </TouchableOpacity>
                             )}
 
                             {onArchive && (
                                 <TouchableOpacity
                                     style={[
-                                        styles.menuItem,
+                                        styles.menuOption,
                                         { borderBottomColor: theme.borderColor, borderBottomWidth: 1 },
                                     ]}
                                     onPress={() => handleAction(onArchive)}>
@@ -114,20 +114,20 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                                         size={18}
                                         color={"#008080"}
                                     />
-                                    <StyledText style={styles.menuText}>
+                                    <StyledText style={styles.menuOptionText}>
                                         {isArchived ? "Unarchive" : "Archive"}
                                     </StyledText>
                                 </TouchableOpacity>
                             )}
 
                             <TouchableOpacity
-                                style={[styles.menuItem, styles.deleteMenuItem]}
+                                style={[styles.menuOption, styles.deleteOption]}
                                 onPress={() => handleAction(onDelete)}>
                                 <Trash2
                                     size={18}
                                     color={theme.destructive}
                                 />
-                                <StyledText style={[styles.menuText, { color: theme.destructive }]}>Delete</StyledText>
+                                <StyledText style={[styles.menuOptionText, { color: theme.destructive }]}>Delete</StyledText>
                             </TouchableOpacity>
                         </Animated.View>
                     </TouchableWithoutFeedback>
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    menuContainer: {
+    menuPopup: {
         padding: 8,
         borderRadius: 10,
         shadowColor: "#000",
@@ -156,16 +156,16 @@ const styles = StyleSheet.create({
         right: 20,
         width: 140,
     },
-    menuItem: {
+    menuOption: {
         flexDirection: "row",
         alignItems: "center",
         paddingVertical: 10,
         paddingHorizontal: 12,
     },
-    deleteMenuItem: {
+    deleteOption: {
         marginTop: 4,
     },
-    menuText: {
+    menuOptionText: {
         marginLeft: 10,
         fontSize: 14,
     },

@@ -92,18 +92,18 @@ const TagItem = ({ id, name, onUpdateTag, onDeleteTag }: TagItemProps) => {
     };
 
     return (
-        <View style={[styles.tagItemContainer, { backgroundColor: theme.card }]}>
+        <View style={[styles.tagItemCard, { backgroundColor: theme.card }]}>
             {isEditing ? (
                 // Editing mode
-                <View style={styles.tagItemEdit}>
+                <View style={styles.tagEditForm}>
                     <TextInput
-                        style={[styles.tagEditInput, { color: theme.text }]}
+                        style={[styles.tagEditField, { color: theme.text }]}
                         value={editingName}
                         onChangeText={setEditingName}
                         autoFocus
                         editable={!isSubmitting}
                     />
-                    <View style={styles.editButtonsContainer}>
+                    <View style={styles.tagEditControls}>
                         <TouchableOpacity
                             style={[styles.actionButton, isSubmitting && styles.disabledButton]}
                             onPress={saveTagEdit}
@@ -127,15 +127,15 @@ const TagItem = ({ id, name, onUpdateTag, onDeleteTag }: TagItemProps) => {
             ) : (
                 // Display mode
                 <>
-                    <View style={styles.tagItemContent}>
+                    <View style={styles.tagDisplayContent}>
                         <TagIcon
                             size={16}
                             color={theme.icon}
                             style={{ marginEnd: 16 }}
                         />
-                        <StyledText style={[styles.tagName, { color: theme.text }]}>{name}</StyledText>
+                        <StyledText style={[styles.tagDisplayName, { color: theme.text }]}>{name}</StyledText>
                     </View>
-                    <View style={styles.tagActionsContainer}>
+                    <View style={styles.tagActionButtons}>
                         <TouchableOpacity
                             style={[styles.actionButton, isSubmitting && styles.disabledButton]}
                             onPress={startEditing}
@@ -162,7 +162,7 @@ const TagItem = ({ id, name, onUpdateTag, onDeleteTag }: TagItemProps) => {
 };
 
 const styles = StyleSheet.create({
-    tagItemContainer: {
+    tagItemCard: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
@@ -175,16 +175,16 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 1,
     },
-    tagItemContent: {
+    tagDisplayContent: {
         flexDirection: "row",
         alignItems: "center",
         flex: 1,
     },
-    tagName: {
+    tagDisplayName: {
         fontSize: 16,
         fontFamily: "Poppins_400Regular",
     },
-    tagActionsContainer: {
+    tagActionButtons: {
         flexDirection: "row",
         alignItems: "center",
     },
@@ -195,18 +195,18 @@ const styles = StyleSheet.create({
     disabledButton: {
         opacity: 0.5,
     },
-    tagItemEdit: {
+    tagEditForm: {
         flex: 1,
         flexDirection: "row",
         alignItems: "center",
     },
-    tagEditInput: {
+    tagEditField: {
         flex: 1,
         fontSize: 16,
         fontFamily: "Poppins_400Regular",
         paddingVertical: 8,
     },
-    editButtonsContainer: {
+    tagEditControls: {
         flexDirection: "row",
         alignItems: "center",
     },

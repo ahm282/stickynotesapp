@@ -7,7 +7,7 @@ export const EmptyTagsState = () => {
     const theme = useTheme();
 
     return (
-        <View style={styles.emptyStateContainer}>
+        <View style={styles.emptyStateWrapper}>
             <StyledText style={{ color: theme.text, textAlign: "center" }}>
                 No tags yet. Create your first tag!
             </StyledText>
@@ -16,7 +16,7 @@ export const EmptyTagsState = () => {
 };
 
 const styles = StyleSheet.create({
-    emptyStateContainer: {
+    emptyStateWrapper: {
         marginTop: 40,
         alignItems: "center",
         justifyContent: "center",

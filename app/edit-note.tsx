@@ -6,6 +6,7 @@ import { useRouter, useLocalSearchParams } from "expo-router";
 import { useNotes } from "@/context/NotesContext";
 import StyledText from "@/components/ui/StyledText";
 import ColorSelector from "@/components/ui/ColorSelector";
+import NotebookTextInput from "@/components/ui/NotebookTextInput";
 import { ArrowLeft } from "lucide-react-native";
 
 export default function EditNote() {
@@ -93,11 +94,9 @@ export default function EditNote() {
                         onSelectColor={setSelectedColor}
                     />
                 </View>
-                <TextInput
+                <NotebookTextInput
                     placeholder='Write your note here...'
                     placeholderTextColor={theme.icon}
-                    style={[styles.contentInput, { color: theme.text }]}
-                    multiline
                     value={content}
                     onChangeText={setContent}
                     autoFocus
@@ -138,11 +137,5 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         borderBottomWidth: 1,
         marginBottom: 16,
-    },
-    contentInput: {
-        fontSize: 16,
-        fontFamily: "Poppins_400Regular",
-        flex: 1,
-        textAlignVertical: "top",
     },
 });

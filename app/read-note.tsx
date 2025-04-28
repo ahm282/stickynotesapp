@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useRouter, useLocalSearchParams } from "expo-router";
@@ -7,7 +7,7 @@ import { useNotes } from "@/context/NotesContext";
 import { ArrowLeft } from "lucide-react-native";
 import StyledText from "@/components/ui/StyledText";
 
-export default function EditNote() {
+export default function ReadNote() {
     const theme = useTheme();
     const router = useRouter();
     const { notes } = useNotes();
@@ -30,9 +30,13 @@ export default function EditNote() {
         : "";
     const noteContent = note?.content || "No content";
 
+    // Split content into lines for rendering with notebook lines
+    const contentLines = noteContent.split("\n");
+    const lineHeight = 28; // Same as in NotebookTextInput component
+
     return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-            <View style={styles.header}>
+        <SafeAreaView style={[styles.pageContainer, { backgroundColor: theme.background }]}>
+            <View style={styles.noteHeader}>
                 <TouchableOpacity
                     onPress={() => router.back()}
                     style={styles.backButton}>
@@ -41,10 +45,10 @@ export default function EditNote() {
                         color={theme.text}
                     />
                 </TouchableOpacity>
-                <StyledText style={[styles.headerTitle, { color: theme.tint }]}>{noteDate}</StyledText>
+                <StyledText style={[styles.noteDate, { color: theme.tint }]}>{noteDate}</StyledText>
             </View>
 
-            <View style={styles.content}>
+            <View style={styles.noteContent}>
                 <View
                     style={{
                         flexDirection: "row",
@@ -52,31 +56,68 @@ export default function EditNote() {
                         justifyContent: "space-between",
                         borderBottomWidth: 1,
                         borderBottomColor: theme.secondary,
+                        marginBottom: 16,
                     }}>
                     <StyledText
                         style={[
-                            styles.titleInput,
+                            styles.noteTitle,
                             { color: theme.text, borderBottomColor: "transparent", width: "90%" },
                         ]}
                         selectable={true}>
                         {noteTitle}
                     </StyledText>
                 </View>
-                <StyledText
-                    selectable={true}
-                    style={[styles.contentInput, { color: theme.text }]}>
-                    {noteContent}
-                </StyledText>
+
+                {/* Notebook-style lined content ScrollView */}
+                <ScrollView
+                    style={styles.notebookScrollView}
+                    showsVerticalScrollIndicator={false}>
+                    <View style={styles.notebookContent}>
+                        {/* Background lines - first line removed */}
+                        <View style={styles.notebookRuledLines}>
+                            {Array.from({ length: Math.max(contentLines.length + 5, 20) }).map((_, index) => (
+                                <View
+                                    key={index}
+                                    style={[
+                                        styles.notebookLine,
+                                        {
+                                            // Start from the second line position
+                                            top: (index + 1) * lineHeight,
+                                            height: 1,
+                                            backgroundColor:
+                                                theme.mode === "dark"
+                                                    ? "rgba(255, 255, 255, 0.1)"
+                                                    : "rgba(0, 0, 0, 0.05)",
+                                        },
+                                    ]}
+                                />
+                            ))}
+                        </View>
+
+                        {/* Note content */}
+                        <StyledText
+                            selectable={true}
+                            style={[
+                                styles.noteBodyText,
+                                {
+                                    color: theme.text,
+                                    lineHeight: lineHeight,
+                                },
+                            ]}>
+                            {noteContent}
+                        </StyledText>
+                    </View>
+                </ScrollView>
             </View>
         </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    pageContainer: {
         flex: 1,
     },
-    header: {
+    noteHeader: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
@@ -86,25 +127,47 @@ const styles = StyleSheet.create({
     backButton: {
         padding: 8,
     },
-    headerTitle: {
+    noteDate: {
         fontSize: 18,
         fontFamily: "Poppins_700Bold",
     },
-    content: {
+    noteContent: {
         flex: 1,
         padding: 16,
+        rowGap: 8,
     },
-    titleInput: {
+    noteTitle: {
         fontSize: 24,
         fontFamily: "Poppins_700Bold",
         paddingVertical: 12,
         borderBottomWidth: 1,
     },
-    contentInput: {
+    notebookScrollView: {
+        flex: 1,
+    },
+    notebookContent: {
+        position: "relative",
+        minHeight: 300,
+        paddingBottom: 50,
+    },
+    notebookRuledLines: {
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        zIndex: 1,
+    },
+    notebookLine: {
+        position: "absolute",
+        left: 0,
+        right: 0,
+    },
+    noteBodyText: {
         fontSize: 16,
         fontFamily: "Poppins_400Regular",
-        flex: 1,
-        textAlignVertical: "top",
-        paddingVertical: 16,
+        zIndex: 2,
+        paddingTop: 0,
+        marginTop: 0,
     },
 });
