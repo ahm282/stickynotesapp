@@ -1,5 +1,3 @@
-"use client";
-
 import type React from "react";
 import { createContext, useState, useEffect, useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -11,10 +9,11 @@ export interface Tag {
 
 interface TagsContextType {
     tags: Tag[];
-    addTag: (name: string) => Promise<Tag>;
+    addTag: (name: string) => Promise<void>;
     updateTag: (id: string, name: string) => Promise<void>;
     deleteTag: (id: string) => Promise<void>;
     getTag: (id: string) => Tag | undefined;
+    isLoading: boolean;
 }
 
 const TagsContext = createContext<TagsContextType | undefined>(undefined);
@@ -29,13 +28,24 @@ export const useTags = () => {
 
 export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [tags, setTags] = useState<Tag[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const loadTags = async () => {
+            setIsLoading(true);
             try {
                 const storedTags = await AsyncStorage.getItem("tags");
                 if (storedTags) {
-                    setTags(JSON.parse(storedTags));
+                    // Filter out any empty tags that might have been saved previously
+                    const parsedTags = JSON.parse(storedTags);
+                    const validTags = parsedTags.filter((tag: Tag) => tag.name && tag.name.trim() !== "");
+
+                    // If we filtered out tags, save the valid ones back to storage
+                    if (validTags.length !== parsedTags.length) {
+                        await AsyncStorage.setItem("tags", JSON.stringify(validTags));
+                    }
+
+                    setTags(validTags);
                 } else {
                     // Initialize with default tags if none exist
                     const defaultTags = [
@@ -49,6 +59,8 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 }
             } catch (error) {
                 console.error("Failed to load tags:", error);
+            } finally {
+                setIsLoading(false);
             }
         };
 
@@ -60,31 +72,70 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
             await AsyncStorage.setItem("tags", JSON.stringify(updatedTags));
         } catch (error) {
             console.error("Failed to save tags:", error);
+            throw error;
         }
     };
 
-    const addTag = async (name: string): Promise<Tag> => {
-        const newTag: Tag = {
-            id: Date.now().toString(),
-            name,
-        };
+    const addTag = async (name: string): Promise<void> => {
+        // Validate tag name
+        const trimmedName = name.trim();
+        if (!trimmedName) {
+            throw new Error("Tag name cannot be empty");
+        }
 
-        const updatedTags = [...tags, newTag];
-        setTags(updatedTags);
-        await saveTags(updatedTags);
-        return newTag;
+        // Check for duplicates
+        const isDuplicate = tags.some((tag) => tag.name.toLowerCase() === trimmedName.toLowerCase());
+        if (isDuplicate) {
+            throw new Error("A tag with this name already exists");
+        }
+
+        try {
+            const newTag: Tag = {
+                id: Date.now().toString(),
+                name: trimmedName,
+            };
+
+            const updatedTags = [...tags, newTag];
+            setTags(updatedTags);
+            await saveTags(updatedTags);
+        } catch (error) {
+            console.error("Error in addTag:", error);
+            throw error;
+        }
     };
 
-    const updateTag = async (id: string, name: string) => {
-        const updatedTags = tags.map((tag) => (tag.id === id ? { ...tag, name } : tag));
-        setTags(updatedTags);
-        await saveTags(updatedTags);
+    const updateTag = async (id: string, name: string): Promise<void> => {
+        // Validate tag name
+        const trimmedName = name.trim();
+        if (!trimmedName) {
+            throw new Error("Tag name cannot be empty");
+        }
+
+        // Check for duplicates, excluding current tag
+        const isDuplicate = tags.some((tag) => tag.id !== id && tag.name.toLowerCase() === trimmedName.toLowerCase());
+        if (isDuplicate) {
+            throw new Error("A tag with this name already exists");
+        }
+
+        try {
+            const updatedTags = tags.map((tag) => (tag.id === id ? { ...tag, name: trimmedName } : tag));
+            setTags(updatedTags);
+            await saveTags(updatedTags);
+        } catch (error) {
+            console.error("Error in updateTag:", error);
+            throw error;
+        }
     };
 
-    const deleteTag = async (id: string) => {
-        const updatedTags = tags.filter((tag) => tag.id !== id);
-        setTags(updatedTags);
-        await saveTags(updatedTags);
+    const deleteTag = async (id: string): Promise<void> => {
+        try {
+            const updatedTags = tags.filter((tag) => tag.id !== id);
+            setTags(updatedTags);
+            await saveTags(updatedTags);
+        } catch (error) {
+            console.error("Error in deleteTag:", error);
+            throw error;
+        }
     };
 
     const getTag = (id: string) => {
@@ -92,6 +143,16 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     return (
-        <TagsContext.Provider value={{ tags, addTag, updateTag, deleteTag, getTag }}>{children}</TagsContext.Provider>
+        <TagsContext.Provider
+            value={{
+                tags,
+                addTag,
+                updateTag,
+                deleteTag,
+                getTag,
+                isLoading,
+            }}>
+            {children}
+        </TagsContext.Provider>
     );
 };

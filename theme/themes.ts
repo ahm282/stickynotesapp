@@ -12,6 +12,7 @@ export const lightTheme = {
     tabIconSelected: "#f59e0b",
     muted: "#F3F4F6",
     destructive: "#EF4444",
+    disabled: "#D1D5DB",
 
     // Note colors
     yellow: "#FFF9C4",
@@ -40,6 +41,7 @@ export const darkTheme = {
     tabIconSelected: "#f59e0b",
     muted: "#1F2937",
     destructive: "#EF4444",
+    disabled: "#4B5563",
 
     // Note colors
     yellow: "#E19E09",
