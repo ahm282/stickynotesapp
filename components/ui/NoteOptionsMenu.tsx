@@ -1,7 +1,6 @@
 import React, { useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
-// import { MaterialIcons } from "@expo/vector-icons";
 import { Edit, Archive, Trash2 } from "lucide-react-native";
 import StyledText from "./StyledText";
 

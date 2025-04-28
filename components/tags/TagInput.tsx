@@ -53,7 +53,7 @@ export const TagInput = ({ onAddTag }: TagInputProps) => {
                 style={[styles.addButton, { backgroundColor: theme.tint }]}
                 onPress={handleAddTag}>
                 <Plus
-                    size={22}
+                    size={16}
                     color={theme.background}
                 />
             </TouchableOpacity>

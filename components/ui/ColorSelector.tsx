@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
-import { MaterialIcons } from "@expo/vector-icons";
+import { Check, SwatchBook } from "lucide-react-native";
 
 interface ColorSelectorProps {
     selectedColor: string;
@@ -65,8 +65,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selectedColor, onSelectCo
             <TouchableOpacity
                 style={[styles.colorIndicator, { backgroundColor: getColorValue(selectedColor) }]}
                 onPress={showMenu}>
-                <MaterialIcons
-                    name='palette'
+                <SwatchBook
                     size={16}
                     color='#FFF'
                 />
@@ -96,8 +95,7 @@ const ColorSelector: React.FC<ColorSelectorProps> = ({ selectedColor, onSelectCo
                                             style={[styles.colorOption, { backgroundColor: getColorValue(colorKey) }]}
                                             onPress={() => handleColorSelect(colorKey)}>
                                             {selectedColor === colorKey && (
-                                                <MaterialIcons
-                                                    name='check'
+                                                <Check
                                                     size={16}
                                                     color='#FFF'
                                                 />
@@ -118,7 +116,7 @@ const styles = StyleSheet.create({
     colorIndicator: {
         width: 32,
         height: 32,
-        borderRadius: 16,
+        borderRadius: "50%",
         justifyContent: "center",
         alignItems: "center",
     },

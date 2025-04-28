@@ -3,8 +3,8 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import { MaterialIcons } from "@expo/vector-icons";
 import { useNotes } from "@/context/NotesContext";
+import { ArrowLeft } from "lucide-react-native";
 import StyledText from "@/components/ui/StyledText";
 
 export default function EditNote() {
@@ -36,8 +36,7 @@ export default function EditNote() {
                 <TouchableOpacity
                     onPress={() => router.back()}
                     style={styles.backButton}>
-                    <MaterialIcons
-                        name='arrow-back'
+                    <ArrowLeft
                         size={24}
                         color={theme.text}
                     />

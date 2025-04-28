@@ -43,7 +43,6 @@ export const TagsFilter = ({ onFilterChange }: { onFilterChange?: (tagId: string
 
 const styles = StyleSheet.create({
     filterContainer: {
-        paddingHorizontal: 5,
         marginBottom: 10,
     },
 });
