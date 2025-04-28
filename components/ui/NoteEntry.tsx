@@ -83,7 +83,7 @@ export const NoteEntry = ({ note }: NoteProps) => {
                 backgroundColor: getNoteColor(),
                 width: noteWidth,
             }}>
-            <View key={note.id}>
+            <View>
                 <View style={styles.noteHeader}>
                     <View>
                         <StyledText

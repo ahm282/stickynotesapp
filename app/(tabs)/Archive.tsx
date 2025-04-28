@@ -1,5 +1,5 @@
-import React from "react";
-import { StyleSheet, ScrollView, View } from "react-native";
+import React, { useMemo } from "react";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useNotes } from "@/context/NotesContext";
@@ -8,25 +8,22 @@ import NoteEntry from "@/components/ui/NoteEntry";
 import TagsFilter from "@/components/index/TagsFilter";
 import { Header } from "@/components/index/Header";
 import NewNoteButton from "@/components/ui/NewNoteButton";
+import { FlashList } from "@shopify/flash-list";
 
 export default function Archive() {
     const theme = useTheme();
     const { notes } = useNotes();
 
-    // Filter for archived notes only
-    const archivedNotes = notes.filter((note) => note.isArchived === true);
+    // Memoize filtered notes to prevent unnecessary re-renders
+    const archivedNotes = useMemo(() => {
+        return notes.filter((note) => note.isArchived === true);
+    }, [notes]);
 
-    return (
-        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
-            <Header
-                title='Archive'
-                subtitle='Your archived notes.'
-            />
-            <TagsFilter />
-            {archivedNotes.length < 1 ? (
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.emptyContainer}>
+    // Render the empty state or notes list using FlashList
+    const renderContent = () => {
+        if (archivedNotes.length === 0) {
+            return (
+                <View style={styles.emptyContainer}>
                     <StyledText
                         bold
                         style={{
@@ -36,24 +33,31 @@ export default function Archive() {
                         }}>
                         No archived notes yet.
                     </StyledText>
-                </ScrollView>
-            ) : (
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.scrollContainer}>
-                    <View style={styles.gridContainer}>
-                        {archivedNotes.map(
-                            (note) =>
-                                note.isArchived && (
-                                    <NoteEntry
-                                        key={note.id}
-                                        note={note}
-                                    />
-                                )
-                        )}
-                    </View>
-                </ScrollView>
-            )}
+                </View>
+            );
+        }
+
+        return (
+            <FlashList
+                data={archivedNotes}
+                renderItem={({ item }) => <NoteEntry note={item} />}
+                estimatedItemSize={100}
+                keyExtractor={(item) => item.id}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.gridContainer}
+                numColumns={2}
+            />
+        );
+    };
+
+    return (
+        <SafeAreaView style={[styles.container, { backgroundColor: theme.background }]}>
+            <Header
+                title='Archive'
+                subtitle='Your archived notes.'
+            />
+            <TagsFilter />
+            {renderContent()}
             <NewNoteButton />
         </SafeAreaView>
     );
@@ -70,13 +74,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
     },
-    scrollContainer: {
-        flexGrow: 1,
-    },
     gridContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-        paddingHorizontal: 8,
+        padding: 8,
     },
 });

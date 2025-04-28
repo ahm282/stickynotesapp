@@ -27,7 +27,7 @@ export const Tag = ({ id, text, size = "sm", onPress, selected = false }: TagPro
                 <TagIcon
                     size={size === "sm" ? 8 : 14}
                     color={selected ? theme.background : theme.icon}
-                    style={styles.icon}
+                    style={[styles.icon, size === "sm" ? styles.smallIcon : styles.mediumIcon]}
                 />
                 <StyledText
                     style={[
@@ -46,16 +46,21 @@ const styles = StyleSheet.create({
     container: {
         borderRadius: 16,
         alignItems: "center",
-        flexDirection: "row",
         justifyContent: "center",
     },
     smallTag: {
-        paddingVertical: 2,
+        paddingVertical: 4,
         paddingHorizontal: 10,
+        marginHorizontal: 1,
+        justifyContent: "center",
+        alignItems: "center",
     },
     mediumTag: {
-        paddingVertical: 6,
-        paddingHorizontal: 12,
+        paddingVertical: 7,
+        paddingHorizontal: 14,
+        marginHorizontal: 2,
+        justifyContent: "center",
+        alignItems: "center",
     },
     tagContent: {
         flexDirection: "row",
@@ -63,7 +68,13 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     icon: {
-        marginEnd: 5,
+        marginEnd: 7,
+    },
+    smallIcon: {
+        marginTop: 1,
+    },
+    mediumIcon: {
+        marginTop: 1,
     },
     text: {
         fontFamily: "Poppins_400Regular",

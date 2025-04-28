@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { ScrollView, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import { Tag } from "@/components/ui/Tag";
 import { useTags } from "@/context/TagsContext";
+import { FlashList } from "@shopify/flash-list";
 
 export const TagsFilter = ({ onFilterChange }: { onFilterChange?: (tagId: string) => void }) => {
     const { tags } = useTags();
@@ -17,44 +18,33 @@ export const TagsFilter = ({ onFilterChange }: { onFilterChange?: (tagId: string
         }
     };
 
+    const tagsData = [{ id: "all", name: "All notes" }, ...tags];
+
     return (
-        <ScrollView
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.container}
-            style={styles.filterContainer}>
-            <Tag
-                key='all'
-                id='all'
-                text='All notes'
-                size='md'
-                onPress={() => handleTagPress("all")}
-                selected={selectedTag === "all"}
+        <View style={styles.filterContainer}>
+            <FlashList
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                data={tagsData}
+                estimatedItemSize={30}
+                renderItem={({ item }) => (
+                    <Tag
+                        id={item.id}
+                        text={item.name}
+                        size='md'
+                        onPress={() => handleTagPress(item.id)}
+                        selected={selectedTag === item.id}
+                    />
+                )}
             />
-            {tags.map((tag) => (
-                <Tag
-                    key={tag.id}
-                    id={tag.id}
-                    text={tag.name}
-                    size='md'
-                    onPress={() => handleTagPress(tag.id)}
-                    selected={selectedTag === tag.id}
-                />
-            ))}
-        </ScrollView>
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        gap: 6,
-        flexDirection: "row",
-        alignItems: "flex-start",
-        minHeight: 50,
-    },
     filterContainer: {
-        maxHeight: 70,
-        paddingVertical: 10,
+        paddingHorizontal: 5,
+        marginBottom: 10,
     },
 });
 

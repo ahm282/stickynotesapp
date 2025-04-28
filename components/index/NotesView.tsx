@@ -1,9 +1,10 @@
 import React from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import { useNotes } from "@/context/NotesContext";
 import StyledText from "@/components/ui/StyledText";
 import NoteEntry from "../ui/NoteEntry";
+import { FlashList } from "@shopify/flash-list";
 
 export const NotesView = () => {
     const theme = useTheme();
@@ -11,11 +12,9 @@ export const NotesView = () => {
 
     const unarchivedNotes = notes.filter((note) => note.isArchived === false);
 
-    return unarchivedNotes.length < 1 ? (
-        <>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.emptyContainer}>
+    if (unarchivedNotes.length < 1) {
+        return (
+            <View style={styles.emptyContainer}>
                 <StyledText
                     bold
                     style={{
@@ -25,44 +24,36 @@ export const NotesView = () => {
                     }}>
                     No notes yet. Create your first note!
                 </StyledText>
-            </ScrollView>
-        </>
-    ) : (
-        <>
-            <ScrollView
+            </View>
+        );
+    }
+
+    return (
+        <View style={styles.container}>
+            <FlashList
+                data={unarchivedNotes}
+                estimatedItemSize={100}
+                renderItem={({ item }) => <NoteEntry note={item} />}
+                keyExtractor={(item) => item.id}
                 showsVerticalScrollIndicator={false}
-                contentContainerStyle={styles.container}>
-                <View style={styles.gridContainer}>
-                    {notes.map(
-                        (note) =>
-                            note.isArchived === false && (
-                                <NoteEntry
-                                    key={note.id}
-                                    note={note}
-                                />
-                            )
-                    )}
-                </View>
-            </ScrollView>
-        </>
+                contentContainerStyle={styles.flashListPadding}
+                numColumns={2}
+            />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flexGrow: 1,
+        flex: 1,
     },
     emptyContainer: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
     },
-    gridContainer: {
-        flexDirection: "row",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-        paddingVertical: 8,
-        paddingHorizontal: 8,
+    flashListPadding: {
+        padding: 8,
     },
 });
 
