@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import { View, StyleSheet, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useNotes } from "@/context/NotesContext";
 import { useTags } from "@/context/TagsContext";
-import { ArrowLeft } from "lucide-react-native";
+import { ArrowLeft, Edit, Trash2, Archive } from "lucide-react-native";
 import StyledText from "@/components/ui/StyledText";
 import StaticTag from "@/components/ui/StaticTag";
+import NoteOptionsMenu from "@/components/ui/NoteOptionsMenu";
 
 export default function ReadNote() {
     const theme = useTheme();
     const router = useRouter();
-    const { notes } = useNotes();
+    const { notes, deleteNote, archiveNote, unarchiveNote } = useNotes();
     const { tags } = useTags();
+    const [menuVisible, setMenuVisible] = useState(false);
+    const menuButtonRef = useRef<View>(null);
+    const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | undefined>(undefined);
 
     // Check if noteId is passed
     const params = useLocalSearchParams();
@@ -40,6 +44,51 @@ export default function ReadNote() {
     const contentLines = noteContent.split("\n");
     const lineHeight = 28; // Same as in NotebookTextInput component
 
+    // Handle edit button press
+    const handleEdit = () => {
+        if (noteId) {
+            router.push({
+                pathname: "/edit-note",
+                params: { noteId },
+            });
+        }
+    };
+
+    // Handle delete button press
+    const handleDelete = async () => {
+        if (noteId) {
+            await deleteNote(noteId);
+            router.back();
+        }
+    };
+
+    // Handle archive button press
+    const handleArchiveToggle = async () => {
+        if (noteId && note) {
+            if (note.isArchived) {
+                await unarchiveNote(noteId);
+            } else {
+                await archiveNote(noteId);
+            }
+            router.back();
+        }
+    };
+
+    // Function to show options menu
+    const showOptionsMenu = () => {
+        if (menuButtonRef.current) {
+            menuButtonRef.current.measure((x, y, width, height, pageX, pageY) => {
+                setMenuPosition({
+                    x: 20, // Adjust as needed
+                    y: pageY + height,
+                });
+                setMenuVisible(true);
+            });
+        } else {
+            setMenuVisible(true);
+        }
+    };
+
     return (
         <SafeAreaView style={[styles.pageContainer, { backgroundColor: theme.background }]}>
             <View style={styles.noteHeader}>
@@ -51,16 +100,42 @@ export default function ReadNote() {
                         color={theme.text}
                     />
                 </TouchableOpacity>
-                <StyledText style={[styles.noteDate, { color: theme.tint }]}>{noteDate}</StyledText>
+
+                {/* Action buttons */}
+                <View style={styles.noteActions}>
+                    <StyledText style={[styles.noteDate, { color: theme.text }]}>{noteDate}</StyledText>
+                    <View style={styles.actionButtons}>
+                        <TouchableOpacity
+                            style={styles.actionButton}
+                            onPress={handleEdit}>
+                            <Edit
+                                size={22}
+                                color={theme.tint}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            style={styles.actionButton}
+                            onPress={handleArchiveToggle}>
+                            <Archive
+                                size={22}
+                                color={theme.archive}
+                            />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                            ref={menuButtonRef}
+                            style={styles.actionButton}
+                            onPress={showOptionsMenu}>
+                            <Trash2
+                                size={22}
+                                color={theme.destructive}
+                            />
+                        </TouchableOpacity>
+                    </View>
+                </View>
             </View>
 
             <View style={styles.noteContent}>
-                <View
-                    style={{
-                        borderBottomWidth: 1,
-                        borderBottomColor: theme.secondary,
-                        marginBottom: 16,
-                    }}>
+                <View style={[styles.titleContainer, { borderBottomColor: theme.secondary }]}>
                     <StyledText
                         style={[
                             styles.noteTitle,
@@ -70,7 +145,7 @@ export default function ReadNote() {
                         {noteTitle}
                     </StyledText>
 
-                    {/* Display tags for this note */}
+                    {/* Display tags for this note - more subtle, smaller, on one line */}
                     {noteTags.length > 0 && (
                         <View style={styles.tagsContainer}>
                             <FlatList
@@ -83,7 +158,7 @@ export default function ReadNote() {
                                             id={item.id}
                                             text={item.name}
                                             size='sm'
-                                            selected={true}
+                                            selected={false}
                                         />
                                     </View>
                                 )}
@@ -134,6 +209,17 @@ export default function ReadNote() {
                     </View>
                 </ScrollView>
             </View>
+
+            {/* Options menu */}
+            <NoteOptionsMenu
+                visible={menuVisible}
+                onClose={() => setMenuVisible(false)}
+                onDelete={handleDelete}
+                onEdit={handleEdit}
+                onArchive={handleArchiveToggle}
+                menuPosition={menuPosition}
+                isArchived={note?.isArchived}
+            />
         </SafeAreaView>
     );
 }
@@ -152,14 +238,31 @@ const styles = StyleSheet.create({
     backButton: {
         padding: 8,
     },
+    noteActions: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    actionButtons: {
+        flexDirection: "row",
+        marginLeft: 12,
+    },
+    actionButton: {
+        padding: 8,
+        marginLeft: 4,
+    },
     noteDate: {
-        fontSize: 18,
+        fontSize: 16,
+        marginTop: 5,
         fontFamily: "Poppins_700Bold",
     },
     noteContent: {
         flex: 1,
         padding: 16,
         rowGap: 8,
+    },
+    titleContainer: {
+        borderBottomWidth: 1,
+        marginBottom: 16,
     },
     noteTitle: {
         fontSize: 24,
@@ -169,9 +272,11 @@ const styles = StyleSheet.create({
     },
     tagsContainer: {
         marginBottom: 12,
+        flexDirection: "row",
+        alignItems: "center",
     },
     tagWrapper: {
-        marginRight: 6,
+        marginRight: 4,
     },
     notebookScrollView: {
         flex: 1,

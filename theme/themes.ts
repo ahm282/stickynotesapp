@@ -11,8 +11,10 @@ export const lightTheme = {
     tabIconDefault: "#9CA3AF",
     tabIconSelected: "#f59e0b",
     muted: "#F3F4F6",
-    destructive: "#EF4444",
+    destructive: "#FF2525",
     disabled: "#D1D5DB",
+    edit: "#4A90E2",
+    archive: "#008080",
 
     // Note colors
     yellow: "#FFF9C4",
