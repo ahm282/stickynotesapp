@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useNotes } from "@/context/NotesContext";
 import StyledText from "@/components/ui/StyledText";
 import ColorSelector from "@/components/ui/ColorSelector";
+import TagSelector from "@/components/ui/TagSelector";
 import NotebookTextInput from "@/components/ui/NotebookTextInput";
 import { ArrowLeft } from "lucide-react-native";
 
@@ -30,6 +31,7 @@ export default function EditNote() {
     const [title, setTitle] = useState(note.title);
     const [content, setContent] = useState(note.content);
     const [selectedColor, setSelectedColor] = useState(note.color);
+    const [selectedTagIds, setSelectedTagIds] = useState<string[]>(note.tagIds || []);
 
     const handleSave = async () => {
         if (title.trim() || content.trim()) {
@@ -38,7 +40,7 @@ export default function EditNote() {
                     noteId,
                     title.trim() || "Untitled note",
                     content.trim(),
-                    note.tagIds || [],
+                    selectedTagIds,
                     selectedColor!
                 );
             }
@@ -70,38 +72,41 @@ export default function EditNote() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.content}>
-                <View
-                    style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        borderBottomWidth: 1,
-                        borderBottomColor: theme.secondary,
-                    }}>
-                    <TextInput
-                        placeholder='Title'
-                        placeholderTextColor={theme.icon}
-                        style={[
-                            styles.titleInput,
-                            { color: theme.text, borderBottomColor: "transparent", width: "90%" },
-                        ]}
-                        value={title}
-                        onChangeText={setTitle}
+            <ScrollView style={styles.scrollContainer}>
+                <View style={styles.content}>
+                    <View
+                        style={[styles.topInputSection, { borderBottomColor: theme.secondary }]}>
+                        <TextInput
+                            placeholder='Title'
+                            placeholderTextColor={theme.icon}
+                            style={[
+                                styles.titleInput,
+                                { color: theme.text, borderBottomColor: "transparent", width: "90%" },
+                            ]}
+                            value={title}
+                            onChangeText={setTitle}
+                        />
+                        <ColorSelector
+                            selectedColor={selectedColor!}
+                            onSelectColor={setSelectedColor}
+                        />
+                    </View>
+                    
+                    {/* Add tag selector */}
+                    <TagSelector 
+                        selectedTagIds={selectedTagIds}
+                        onTagsChange={setSelectedTagIds}
                     />
-                    <ColorSelector
-                        selectedColor={selectedColor!}
-                        onSelectColor={setSelectedColor}
+                    
+                    <NotebookTextInput
+                        placeholder='Write your note here...'
+                        placeholderTextColor={theme.icon}
+                        value={content}
+                        onChangeText={setContent}
+                        autoFocus
                     />
                 </View>
-                <NotebookTextInput
-                    placeholder='Write your note here...'
-                    placeholderTextColor={theme.icon}
-                    value={content}
-                    onChangeText={setContent}
-                    autoFocus
-                />
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -127,15 +132,25 @@ const styles = StyleSheet.create({
     saveButton: {
         padding: 8,
     },
+    scrollContainer: {
+        flex: 1,
+    },
     content: {
         flex: 1,
         padding: 16,
+        rowGap: 12,
+    },
+    topInputSection: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        borderBottomWidth: 1,
+        marginBottom: 16,
     },
     titleInput: {
         fontSize: 24,
         fontFamily: "Poppins_700Bold",
         paddingVertical: 12,
         borderBottomWidth: 1,
-        marginBottom: 16,
     },
 });

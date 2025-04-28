@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, StyleSheet, TouchableOpacity } from "react-native";
+import { View, TextInput, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useRouter } from "expo-router";
@@ -7,6 +7,7 @@ import { useNotes } from "@/context/NotesContext";
 import { ArrowLeft } from "lucide-react-native";
 import StyledText from "@/components/ui/StyledText";
 import ColorSelector from "@/components/ui/ColorSelector";
+import TagSelector from "@/components/ui/TagSelector";
 import NotebookTextInput from "@/components/ui/NotebookTextInput";
 import Toast from "react-native-toast-message";
 
@@ -18,10 +19,11 @@ export default function CreateNote() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [selectedColor, setSelectedColor] = useState("yellow");
+    const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
 
     const handleSave = async () => {
         if (title.trim() || content.trim()) {
-            await addNote(title.trim() || "Untitled note", content.trim(), [], selectedColor);
+            await addNote(title.trim() || "Untitled note", content.trim(), selectedTagIds, selectedColor);
             router.back();
         } else {
             Toast.show({
@@ -51,31 +53,40 @@ export default function CreateNote() {
                 </TouchableOpacity>
             </View>
 
-            <View style={styles.content}>
-                <View style={[styles.topInputSection, { borderBottomColor: theme.secondary }]}>
-                    <TextInput
-                        placeholder='Title'
-                        placeholderTextColor={theme.icon}
-                        style={[
-                            styles.titleInput,
-                            { color: theme.text, borderBottomColor: "transparent", width: "90%" },
-                        ]}
-                        value={title}
-                        onChangeText={setTitle}
+            <ScrollView style={styles.scrollContainer}>
+                <View style={styles.content}>
+                    <View style={[styles.topInputSection, { borderBottomColor: theme.secondary }]}>
+                        <TextInput
+                            placeholder='Title'
+                            placeholderTextColor={theme.icon}
+                            style={[
+                                styles.titleInput,
+                                { color: theme.text, borderBottomColor: "transparent", width: "90%" },
+                            ]}
+                            value={title}
+                            onChangeText={setTitle}
+                        />
+                        <ColorSelector
+                            selectedColor={selectedColor}
+                            onSelectColor={setSelectedColor}
+                        />
+                    </View>
+
+                    {/* Add tag selector */}
+                    <TagSelector
+                        selectedTagIds={selectedTagIds}
+                        onTagsChange={setSelectedTagIds}
                     />
-                    <ColorSelector
-                        selectedColor={selectedColor}
-                        onSelectColor={setSelectedColor}
+
+                    <NotebookTextInput
+                        placeholder='Write your note here...'
+                        placeholderTextColor={theme.icon}
+                        value={content}
+                        onChangeText={setContent}
+                        autoFocus
                     />
                 </View>
-                <NotebookTextInput
-                    placeholder='Write your note here...'
-                    placeholderTextColor={theme.icon}
-                    value={content}
-                    onChangeText={setContent}
-                    autoFocus
-                />
-            </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -94,6 +105,9 @@ const styles = StyleSheet.create({
     backButton: {
         padding: 8,
     },
+    scrollContainer: {
+        flex: 1,
+    },
     topInputSection: {
         flexDirection: "row",
         alignItems: "center",
@@ -110,7 +124,7 @@ const styles = StyleSheet.create({
     content: {
         flex: 1,
         padding: 16,
-        rowGap: 32,
+        rowGap: 16,
     },
     titleInput: {
         fontSize: 24,

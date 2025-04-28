@@ -2,8 +2,10 @@ import React, { useMemo, useState, useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import { Note, useNotes } from "@/context/NotesContext";
+import { useTags } from "@/context/TagsContext";
 import Entypo from "@expo/vector-icons/Entypo";
 import StyledText from "@/components/ui/StyledText";
+import MiniTag from "@/components/ui/MiniTag";
 import truncateText from "@/util/TruncateNote";
 import NoteOptionsMenu from "@/components/ui/NoteOptionsMenu";
 import { router } from "expo-router";
@@ -14,6 +16,7 @@ interface NoteProps {
 
 export const NoteEntry = ({ note }: NoteProps) => {
     const theme = useTheme();
+    const { tags } = useTags();
     const { deleteNote, archiveNote, unarchiveNote } = useNotes();
     const screenWidth = Dimensions.get("window").width;
     const noteWidth = (screenWidth - 60) / 2;
@@ -22,10 +25,20 @@ export const NoteEntry = ({ note }: NoteProps) => {
     const [menuPosition, setMenuPosition] = useState<{ x: number; y: number } | undefined>(undefined);
     const iconRef = useRef<View>(null);
 
-    // Calculate truncated content once when note or dimensions change to avoid unnecessary re-renders
+    // Get tags for this note - limit to 3 for mini tags
+    const noteTags = useMemo(() => {
+        if (!note.tagIds || note.tagIds.length === 0) return [];
+        return tags.filter((tag) => note.tagIds.includes(tag.id)).slice(0, 3);
+    }, [note.tagIds, tags]);
+
+    // Calculate if we need to show a "+n more" badge
+    const extraTagsCount = (note.tagIds?.length || 0) - noteTags.length;
+
     const truncatedContent = useMemo(() => {
-        return truncateText(note.content, noteWidth, noteHeight);
-    }, [note.content, noteWidth, noteHeight]);
+        // Only reduce height slightly for tags since they're now much smaller
+        const contentHeight = noteTags.length > 0 ? noteHeight - 15 : noteHeight;
+        return truncateText(note.content, noteWidth, contentHeight);
+    }, [note.content, noteWidth, noteHeight, noteTags.length]);
 
     // Get the color from the theme based on the note's color key
     const getNoteColor = () => {
@@ -83,7 +96,7 @@ export const NoteEntry = ({ note }: NoteProps) => {
                 backgroundColor: getNoteColor(),
                 width: noteWidth,
             }}>
-            <View>
+            <View style={styles.noteCardContent}>
                 <View style={styles.noteCardHeader}>
                     <View>
                         <StyledText
@@ -113,7 +126,26 @@ export const NoteEntry = ({ note }: NoteProps) => {
                         />
                     </TouchableOpacity>
                 </View>
-                <StyledText style={styles.noteCardContent}>{truncatedContent}</StyledText>
+                <StyledText style={styles.noteCardText}>{truncatedContent}</StyledText>
+
+                {/* Tags display */}
+                {noteTags.length > 0 && (
+                    <View style={styles.tagsContainer}>
+                        {noteTags.map((tag) => (
+                            <MiniTag
+                                key={tag.id}
+                                text={tag.name}
+                            />
+                        ))}
+                        {extraTagsCount > 0 && (
+                            <View style={[styles.moreTagsBadge, { backgroundColor: theme.tagBackground }]}>
+                                <StyledText style={[styles.moreTagsText, { color: theme.text }]}>
+                                    +{extraTagsCount}
+                                </StyledText>
+                            </View>
+                        )}
+                    </View>
+                )}
             </View>
 
             <NoteOptionsMenu
@@ -139,6 +171,13 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2,
         height: 230,
+        display: "flex",
+        flexDirection: "column",
+    },
+    noteCardContent: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
     },
     noteCardHeader: {
         paddingStart: 16,
@@ -155,9 +194,28 @@ const styles = StyleSheet.create({
     noteCardDate: {
         fontSize: 8,
     },
-    noteCardContent: {
+    noteCardText: {
         fontSize: 14,
         paddingHorizontal: 16,
+        flex: 1,
+    },
+    tagsContainer: {
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        marginEnd: 10,
+        paddingBottom: 10,
+        paddingTop: 2,
+        flexWrap: "nowrap",
+        alignItems: "center",
+    },
+    moreTagsBadge: {
+        borderRadius: 4,
+        paddingVertical: 1,
+        paddingHorizontal: 3,
+    },
+    moreTagsText: {
+        fontSize: 7,
+        fontFamily: "Poppins_400Regular",
     },
     optionsIcon: {
         padding: 10,

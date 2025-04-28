@@ -24,7 +24,6 @@ export const TagInput = ({ onAddTag }: TagInputProps) => {
                     });
                 })
                 .catch((error) => {
-                    console.error("Error adding tag:", error);
                     Toast.show({
                         type: "error",
                         text1: "Error",

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
@@ -13,15 +13,30 @@ import { FlashList } from "@shopify/flash-list";
 export default function Archive() {
     const theme = useTheme();
     const { notes } = useNotes();
+    const [selectedTagId, setSelectedTagId] = useState<string>("all");
 
-    // Memoize filtered notes to prevent unnecessary re-renders
-    const archivedNotes = useMemo(() => {
-        return notes.filter((note) => note.isArchived === true);
-    }, [notes]);
+    // Handle tag filter change
+    const handleTagFilter = (tagId: string) => {
+        setSelectedTagId(tagId);
+    };
+
+    // Memoize filtered notes based on archive status and selected tag
+    const filteredNotes = useMemo(() => {
+        // First filter to get archived notes
+        const archivedNotes = notes.filter((note) => note.isArchived === true);
+
+        // If "all" is selected, return all archived notes
+        if (selectedTagId === "all") {
+            return archivedNotes;
+        }
+
+        // Otherwise, filter by the selected tag
+        return archivedNotes.filter((note) => note.tagIds && note.tagIds.includes(selectedTagId));
+    }, [notes, selectedTagId]);
 
     // Render the empty state or notes list using FlashList
     const renderContent = () => {
-        if (archivedNotes.length === 0) {
+        if (filteredNotes.length === 0) {
             return (
                 <View style={styles.emptyContainer}>
                     <StyledText
@@ -31,7 +46,7 @@ export default function Archive() {
                             color: theme.text,
                             textAlign: "center",
                         }}>
-                        No archived notes yet.
+                        {selectedTagId === "all" ? "No archived notes yet." : "No archived notes with this tag."}
                     </StyledText>
                 </View>
             );
@@ -39,7 +54,7 @@ export default function Archive() {
 
         return (
             <FlashList
-                data={archivedNotes}
+                data={filteredNotes}
                 renderItem={({ item }) => <NoteEntry note={item} />}
                 estimatedItemSize={100}
                 keyExtractor={(item) => item.id}
@@ -56,7 +71,7 @@ export default function Archive() {
                 title='Archive'
                 subtitle='Your archived notes.'
             />
-            <TagsFilter />
+            <TagsFilter onFilterChange={handleTagFilter} />
             {renderContent()}
             <NewNoteButton />
         </SafeAreaView>

@@ -112,7 +112,6 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         const updatedNotes = notes.map((note) =>
             note.id === id ? { ...note, title, content, tagIds, color, updatedAt: Date.now() } : note
         );
-
         setNotes(updatedNotes);
         await saveNotes(updatedNotes);
         Toast.show({

@@ -1,16 +1,19 @@
 import React from "react";
-import { View, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import { View, StyleSheet, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "@/theme/themeProvider";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { useNotes } from "@/context/NotesContext";
+import { useTags } from "@/context/TagsContext";
 import { ArrowLeft } from "lucide-react-native";
 import StyledText from "@/components/ui/StyledText";
+import StaticTag from "@/components/ui/StaticTag";
 
 export default function ReadNote() {
     const theme = useTheme();
     const router = useRouter();
     const { notes } = useNotes();
+    const { tags } = useTags();
 
     // Check if noteId is passed
     const params = useLocalSearchParams();
@@ -29,6 +32,9 @@ export default function ReadNote() {
           })
         : "";
     const noteContent = note?.content || "No content";
+
+    // Get tags for this note
+    const noteTags = note?.tagIds ? tags.filter((tag) => note.tagIds.includes(tag.id)) : [];
 
     // Split content into lines for rendering with notebook lines
     const contentLines = noteContent.split("\n");
@@ -51,9 +57,6 @@ export default function ReadNote() {
             <View style={styles.noteContent}>
                 <View
                     style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
                         borderBottomWidth: 1,
                         borderBottomColor: theme.secondary,
                         marginBottom: 16,
@@ -66,6 +69,28 @@ export default function ReadNote() {
                         selectable={true}>
                         {noteTitle}
                     </StyledText>
+
+                    {/* Display tags for this note */}
+                    {noteTags.length > 0 && (
+                        <View style={styles.tagsContainer}>
+                            <FlatList
+                                horizontal
+                                data={noteTags}
+                                keyExtractor={(item) => `note-tag-${item.id}`}
+                                renderItem={({ item }) => (
+                                    <View style={styles.tagWrapper}>
+                                        <StaticTag
+                                            id={item.id}
+                                            text={item.name}
+                                            size='sm'
+                                            selected={true}
+                                        />
+                                    </View>
+                                )}
+                                showsHorizontalScrollIndicator={false}
+                            />
+                        </View>
+                    )}
                 </View>
 
                 {/* Notebook-style lined content ScrollView */}
@@ -141,6 +166,12 @@ const styles = StyleSheet.create({
         fontFamily: "Poppins_700Bold",
         paddingVertical: 12,
         borderBottomWidth: 1,
+    },
+    tagsContainer: {
+        marginBottom: 12,
+    },
+    tagWrapper: {
+        marginRight: 6,
     },
     notebookScrollView: {
         flex: 1,

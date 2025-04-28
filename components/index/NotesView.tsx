@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View, StyleSheet } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import { useNotes } from "@/context/NotesContext";
@@ -6,13 +6,28 @@ import StyledText from "@/components/ui/StyledText";
 import NoteEntry from "../ui/NoteEntry";
 import { FlashList } from "@shopify/flash-list";
 
-export const NotesView = () => {
+interface NotesViewProps {
+    selectedTagId?: string;
+}
+
+export const NotesView = ({ selectedTagId = "all" }: NotesViewProps) => {
     const theme = useTheme();
     const { notes } = useNotes();
 
-    const unarchivedNotes = notes.filter((note) => note.isArchived === false);
+    // Filter notes based on archive status and selected tag
+    const filteredNotes = useMemo(() => {
+        const unarchivedNotes = notes.filter((note) => note.isArchived === false);
 
-    if (unarchivedNotes.length < 1) {
+        // If "all" is selected, return all unarchived notes
+        if (selectedTagId === "all") {
+            return unarchivedNotes;
+        }
+
+        // Otherwise, return notes that contain the selected tag ID
+        return unarchivedNotes.filter((note) => note.tagIds && note.tagIds.includes(selectedTagId));
+    }, [notes, selectedTagId]);
+
+    if (filteredNotes.length < 1) {
         return (
             <View style={styles.emptyContainer}>
                 <StyledText
@@ -22,7 +37,7 @@ export const NotesView = () => {
                         color: theme.text,
                         textAlign: "center",
                     }}>
-                    No notes yet. Create your first note!
+                    {selectedTagId === "all" ? "No notes yet. Create your first note!" : "No notes with this tag."}
                 </StyledText>
             </View>
         );
@@ -31,7 +46,7 @@ export const NotesView = () => {
     return (
         <View style={styles.container}>
             <FlashList
-                data={unarchivedNotes}
+                data={filteredNotes}
                 estimatedItemSize={100}
                 renderItem={({ item }) => <NoteEntry note={item} />}
                 keyExtractor={(item) => item.id}
