@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     noteTitle: {
-        fontSize: 16,
+        fontSize: 15,
     },
     noteDate: {
         fontSize: 8,

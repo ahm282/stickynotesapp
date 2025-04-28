@@ -1,62 +1,42 @@
-import React from "react";
-import { TouchableOpacity, View, StyleSheet, ViewStyle, TextStyle, StyleProp } from "react-native";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+import { TagIcon } from "lucide-react-native";
 import { useTheme } from "@/theme/themeProvider";
 import StyledText from "./StyledText";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-export type TagProps = {
+interface TagProps {
     id: string;
     text: string;
-    size?: "sm" | "md" | "lg";
-    onPress?: () => void;
-    disabled?: boolean;
+    size?: "sm" | "md";
+    onPress?: (id: string) => void;
     selected?: boolean;
-    style?: StyleProp<ViewStyle>;
-    textStyle?: StyleProp<TextStyle>;
-};
+}
 
-export const Tag = ({
-    id,
-    text,
-    size = "md",
-    onPress,
-    disabled = false,
-    selected = false,
-    style,
-    textStyle,
-}: TagProps) => {
+export const Tag = ({ id, text, size = "sm", onPress, selected = false }: TagProps) => {
     const theme = useTheme();
-    const sizeStyle = getSizeStyle(size);
-
-    // Use theme colors
-    const primaryColor = theme.tint;
-    const secondaryColor = theme.secondary;
-    const textColor = theme.text;
-    const tagStyle = {
-        backgroundColor: selected ? primaryColor : secondaryColor,
-    };
-    const textStyleColor = {
-        color: selected ? theme.background : textColor,
-    };
-
-    const shouldShowIcon = text !== "All" && text !== "All notes";
 
     return (
         <TouchableOpacity
-            onPress={onPress}
-            disabled={disabled}
-            style={[styles.container, tagStyle, disabled && styles.disabled, style]}
             activeOpacity={0.7}
-            id={id}>
-            <View style={[styles.tagContainer, sizeStyle.padding]}>
-                {shouldShowIcon && (
-                    <MaterialCommunityIcons
-                        name='tag-outline'
-                        size={15}
-                        style={textStyleColor}
-                    />
-                )}
-                <StyledText style={[styles.text, textStyleColor, sizeStyle.font, textStyle]}>{text}</StyledText>
+            onPress={() => onPress?.(id)}
+            style={[
+                styles.container,
+                size === "sm" ? styles.smallTag : styles.mediumTag,
+                selected ? { backgroundColor: theme.tint } : { backgroundColor: theme.tagBackground },
+            ]}>
+            <View style={styles.tagContent}>
+                <TagIcon
+                    size={size === "sm" ? 8 : 14}
+                    color={selected ? theme.background : theme.icon}
+                    style={styles.icon}
+                />
+                <StyledText
+                    style={[
+                        styles.text,
+                        size === "sm" ? styles.smallText : styles.mediumText,
+                        { color: selected ? theme.background : theme.icon },
+                    ]}>
+                    {text}
+                </StyledText>
             </View>
         </TouchableOpacity>
     );
@@ -64,46 +44,37 @@ export const Tag = ({
 
 const styles = StyleSheet.create({
     container: {
-        borderRadius: 20,
+        borderRadius: 16,
+        alignItems: "center",
+        flexDirection: "row",
+        justifyContent: "center",
     },
-    disabled: {
-        opacity: 0.5,
+    smallTag: {
+        paddingVertical: 2,
+        paddingHorizontal: 10,
     },
-    tagContainer: {
+    mediumTag: {
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+    },
+    tagContent: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "center",
-        columnGap: 4,
+    },
+    icon: {
+        marginEnd: 5,
     },
     text: {
-        includeFontPadding: false,
-        textAlignVertical: "center",
+        fontFamily: "Poppins_400Regular",
+        lineHeight: 20,
+    },
+    smallText: {
+        fontSize: 12,
+    },
+    mediumText: {
+        fontSize: 14,
     },
 });
-
-const getSizeStyle = (size: string): { padding: ViewStyle; font: TextStyle } => {
-    switch (size) {
-        case "sm":
-            return {
-                padding: { paddingVertical: 4, paddingHorizontal: 8 },
-                font: { fontSize: 12 },
-            };
-        case "md":
-            return {
-                padding: { paddingVertical: 8, paddingHorizontal: 20 },
-                font: { fontSize: 14 },
-            };
-        case "lg":
-            return {
-                padding: { paddingVertical: 10, paddingHorizontal: 20 },
-                font: { fontSize: 18 },
-            };
-        default:
-            return {
-                padding: { paddingVertical: 7, paddingHorizontal: 14 },
-                font: { fontSize: 14 },
-            };
-    }
-};
 
 export default Tag;

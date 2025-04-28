@@ -1,7 +1,8 @@
 import React, { useRef } from "react";
 import { View, StyleSheet, TouchableOpacity, Modal, TouchableWithoutFeedback, Animated } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
-import { MaterialIcons } from "@expo/vector-icons";
+// import { MaterialIcons } from "@expo/vector-icons";
+import { Edit, Archive, Trash2 } from "lucide-react-native";
 import StyledText from "./StyledText";
 
 interface NoteOptionsMenuProps {
@@ -95,10 +96,9 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                                         { borderBottomColor: theme.borderColor, borderBottomWidth: 1 },
                                     ]}
                                     onPress={() => handleAction(onEdit)}>
-                                    <MaterialIcons
-                                        name='edit'
+                                    <Edit
                                         size={18}
-                                        color={theme.text}
+                                        color={"#4A90E2"}
                                     />
                                     <StyledText style={styles.menuText}>Edit</StyledText>
                                 </TouchableOpacity>
@@ -111,10 +111,9 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                                         { borderBottomColor: theme.borderColor, borderBottomWidth: 1 },
                                     ]}
                                     onPress={() => handleAction(onArchive)}>
-                                    <MaterialIcons
-                                        name='archive'
+                                    <Archive
                                         size={18}
-                                        color={theme.text}
+                                        color={"#008080"}
                                     />
                                     <StyledText style={styles.menuText}>
                                         {isArchived ? "Unarchive" : "Archive"}
@@ -125,8 +124,7 @@ const NoteOptionsMenu: React.FC<NoteOptionsMenuProps> = ({
                             <TouchableOpacity
                                 style={[styles.menuItem, styles.deleteMenuItem]}
                                 onPress={() => handleAction(onDelete)}>
-                                <MaterialIcons
-                                    name='delete-outline'
+                                <Trash2
                                     size={18}
                                     color={theme.destructive}
                                 />

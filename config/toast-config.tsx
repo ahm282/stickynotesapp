@@ -70,7 +70,7 @@ export const toastConfig = {
         <View style={[styles.toastContainer, styles.archiveContainer]}>
             <Archive
                 size={24}
-                color='#D59405'
+                color='#008080'
             />
             <View style={styles.contentContainer}>
                 {text1 && (
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     archiveContainer: {
         backgroundColor: "#fff",
         borderLeftWidth: 8,
-        borderLeftColor: "#D59405",
+        borderLeftColor: "#008080",
     },
     deleteContainer: {
         backgroundColor: "#fff",

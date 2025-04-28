@@ -1,32 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, StyleSheet } from "react-native";
 import { Tag } from "@/components/ui/Tag";
+import { useTags } from "@/context/TagsContext";
 
-export const TagsFilter = () => {
-    const tags = [
-        { id: "2", text: "Work", color: "#a80450" },
-        { id: "3", text: "Personal", color: "#04a850" },
-        { id: "4", text: "Ideas", color: "#a85004" },
-        { id: "5", text: "Shopping", color: "#50a804" },
-        { id: "6", text: "Health", color: "#0045a8" },
-        { id: "7", text: "Meetings", color: "#a804a8" },
-        { id: "8", text: "Reading", color: "#a8a804" },
-    ];
-
+export const TagsFilter = ({ onFilterChange }: { onFilterChange?: (tagId: string) => void }) => {
+    const { tags } = useTags();
     const [selectedTag, setSelectedTag] = useState<string>("all");
-    const [filteredTags, setFilteredTags] = useState(tags);
-
-    useEffect(() => {
-        if (selectedTag && selectedTag !== "all") {
-            const filtered = tags.filter((tag) => tag.id === selectedTag);
-            setFilteredTags(filtered);
-        } else {
-            setFilteredTags(tags);
-        }
-    }, [selectedTag]);
 
     const handleTagPress = (id: string) => {
-        setSelectedTag((prevSelected) => (prevSelected === id ? "all" : id));
+        const newSelected = selectedTag === id ? "all" : id;
+        setSelectedTag(newSelected);
+
+        // If onFilterChange prop exists, call it with the selected tag id
+        if (onFilterChange) {
+            onFilterChange(newSelected);
+        }
     };
 
     return (
@@ -47,7 +35,7 @@ export const TagsFilter = () => {
                 <Tag
                     key={tag.id}
                     id={tag.id}
-                    text={tag.text}
+                    text={tag.name}
                     size='md'
                     onPress={() => handleTagPress(tag.id)}
                     selected={selectedTag === tag.id}

@@ -7,13 +7,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export interface Tag {
     id: string;
     name: string;
-    color: string;
 }
 
 interface TagsContextType {
     tags: Tag[];
-    addTag: (name: string, color: string) => Promise<Tag>;
-    updateTag: (id: string, name: string, color: string) => Promise<void>;
+    addTag: (name: string) => Promise<Tag>;
+    updateTag: (id: string, name: string) => Promise<void>;
     deleteTag: (id: string) => Promise<void>;
     getTag: (id: string) => Tag | undefined;
 }
@@ -40,10 +39,10 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 } else {
                     // Initialize with default tags if none exist
                     const defaultTags = [
-                        { id: "1", name: "Work", color: "#ff7675" },
-                        { id: "2", name: "Personal", color: "#74b9ff" },
-                        { id: "3", name: "Ideas", color: "#55efc4" },
-                        { id: "4", name: "Important", color: "#ffeaa7" },
+                        { id: "1", name: "Work" },
+                        { id: "2", name: "Personal" },
+                        { id: "3", name: "Ideas" },
+                        { id: "4", name: "Important" },
                     ];
                     setTags(defaultTags);
                     await AsyncStorage.setItem("tags", JSON.stringify(defaultTags));
@@ -64,11 +63,10 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     };
 
-    const addTag = async (name: string, color: string): Promise<Tag> => {
+    const addTag = async (name: string): Promise<Tag> => {
         const newTag: Tag = {
             id: Date.now().toString(),
             name,
-            color,
         };
 
         const updatedTags = [...tags, newTag];
@@ -77,8 +75,8 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
         return newTag;
     };
 
-    const updateTag = async (id: string, name: string, color: string) => {
-        const updatedTags = tags.map((tag) => (tag.id === id ? { ...tag, name, color } : tag));
+    const updateTag = async (id: string, name: string) => {
+        const updatedTags = tags.map((tag) => (tag.id === id ? { ...tag, name } : tag));
         setTags(updatedTags);
         await saveTags(updatedTags);
     };
