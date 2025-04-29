@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { useTheme } from "@/theme/themeProvider";
 import StyledText from "@/components/ui/StyledText";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { StickyNote } from "lucide-react-native";
 
 interface HeaderProps {
     title: string;
@@ -20,9 +20,8 @@ export const Header = ({ title, subtitle }: HeaderProps) => {
                     alignItems: "center",
                     marginBottom: 5,
                 }}>
-                <FontAwesome6
-                    name='sticky-note'
-                    size={36}
+                <StickyNote
+                    size={34}
                     color={theme.tint}
                 />
                 <StyledText

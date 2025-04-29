@@ -1,43 +1,73 @@
 {
-    "expo": {
-        "name": "postit",
-        "slug": "postit",
-        "version": "1.0.0",
-        "orientation": "portrait",
-        "icon": "./assets/images/icon.png",
-        "scheme": "myapp",
-        "userInterfaceStyle": "automatic",
-        "newArchEnabled": true,
-        "ios": {
-            "supportsTablet": true
-        },
-        "android": {
-            "adaptiveIcon": {
-                "foregroundImage": "./assets/images/adaptive-icon.png",
-                "backgroundColor": "#ffffff"
-            },
-            "package": "com.ahm282.postit"
-        },
-        "web": {
-            "bundler": "metro",
-            "output": "static",
-            "favicon": "./assets/images/favicon.png"
-        },
-        "plugins": [
-            "expo-router",
-            [
-                "expo-splash-screen",
-                {
-                    "image": "./assets/images/splash-icon.png",
-                    "imageWidth": 200,
-                    "resizeMode": "contain",
-                    "backgroundColor": "#ffffff"
-                }
-            ],
-            "expo-font"
-        ],
-        "experiments": {
-            "typedRoutes": true
+  "expo": {
+    "name": "StickyNotes",
+    "slug": "StickyNotes",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/app-icons/icon.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/app-icons/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F59E0B",
+      "dark": {
+        "image": "./assets/images/app-icons/splash.png",
+        "resizeMode": "contain",
+        "backgroundColor": "#111827"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "icon": "./assets/images/app-icons/icon.png",
+      "bundleIdentifier": "com.ahm282.stickynotes",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/app-icons/adaptive-icon/foreground.png",
+        "backgroundImage": "./assets/images/app-icons/adaptive-icon/background.png",
+        "backgroundColor": "#111827"
+      },
+      "package": "com.ahm282.stickynotes"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/app-icons/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/app-icons/splash.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#F59E0B",
+          "dark": {
+            "image": "./assets/images/app-icons/splash.png",
+            "imageWidth": 200,
+            "resizeMode": "contain",
+            "backgroundColor": "#111827"
+          }
         }
+      ],
+      "expo-font"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "7b90d805-aa52-4f7f-bb3c-a9286067130c"
+      }
     }
+  }
 }
