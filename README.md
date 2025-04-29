@@ -1,4 +1,4 @@
-# PostIt - Sticky Notes App
+# Sticky Notes App
 
 A simple, intuitive, minimalistic sticky notes application built with React Native and Expo. Capture your thoughts, ideas, and reminders with ease.
 
