@@ -44,6 +44,8 @@ export const darkTheme = {
     muted: "#1F2937",
     destructive: "#EF4444",
     disabled: "#4B5563",
+    edit: "#4A90E2",
+    archive: "#008080",
 
     // Note colors
     yellow: "#E19E09",
